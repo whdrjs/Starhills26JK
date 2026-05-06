@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>우리 집 놀러오기</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app" data-step="date">
+      <header class="topbar">
+        <button class="icon-button" type="button" data-action="back" aria-label="이전 단계">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+        </button>
+        <button class="topbar-title" type="button" data-admin-trigger aria-label="숨겨진 관리자 모드">
+          <span class="eyebrow">우리 집 초대장</span>
+          <strong id="screenTitle">날짜 선택</strong>
+        </button>
+        <button class="icon-button" type="button" aria-label="초대 링크 공유">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 8a3 3 0 1 0-2.83-4H15a3 3 0 0 0 .17 1L8.9 8.62a3 3 0 1 0 0 6.76L15.17 19a3 3 0 1 0 .93-1.62L9.83 13.75a3.2 3.2 0 0 0 0-3.5l6.27-3.63A3 3 0 0 0 18 8Z" />
+          </svg>
+        </button>
+      </header>
+
+      <nav class="stepper" aria-label="초대 단계">
+        <button type="button" class="step-pill is-active" data-go="date">1 날짜</button>
+        <button type="button" class="step-pill" data-go="guide">2 안내</button>
+        <button type="button" class="step-pill" data-go="info">3 정보</button>
+        <button type="button" class="step-pill" data-go="complete">4 완료</button>
+      </nav>
+
+      <main class="layout">
+        <section class="phone-shell" aria-live="polite">
+          <section class="screen screen-date is-active" data-screen="date">
+            <div class="section-heading">
+              <h1 id="datePageTitle">언제 놀러올래?</h1>
+              <span id="datePageSubtitle">클릭 가능한 날만 선택돼요</span>
+            </div>
+
+            <article class="invite-card">
+              <div class="home-visual">
+                <div class="window-card">
+                  <span id="inviteEyebrow">볼디네 집 초대</span>
+                  <strong id="inviteTitle">저녁 먹고 수다 떨기</strong>
+                  <ul class="meta-list overlay-list">
+                    <li>
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M7 3v3M17 3v3M4 9h16M5 5h14v15H5z" />
+                      </svg>
+                      <span id="selectedDateLine">5월 16일(토) 18:00</span>
+                    </li>
+                    <li>
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 21s7-4.5 7-11a7 7 0 0 0-14 0c0 6.5 7 11 7 11Z" />
+                        <path d="M12 10.5h.01" />
+                      </svg>
+                      목동중앙본로 7길 23, 301호
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <section class="calendar-card">
+              <div class="calendar-head">
+                <button class="icon-button small" type="button" data-month="prev" aria-label="이전 달">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+                <div>
+                  <span>방문 가능 날짜</span>
+                  <strong id="monthLabel">2026년 5월</strong>
+                </div>
+                <button class="icon-button small" type="button" data-month="next" aria-label="다음 달">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M9 6l6 6-6 6" />
+                  </svg>
+                </button>
+              </div>
+
+              <div class="weekday-row" aria-hidden="true">
+                <span>일</span>
+                <span>월</span>
+                <span>화</span>
+                <span>수</span>
+                <span>목</span>
+                <span>금</span>
+                <span>토</span>
+              </div>
+              <div class="calendar-grid" id="calendarGrid"></div>
+            </section>
+
+            <section class="time-card">
+              <h2>가능한 시간</h2>
+              <div class="time-options" id="timeOptions"></div>
+            </section>
+
+            <button class="primary-button bottom-action" type="button" data-go="guide">집 안내 보기</button>
+          </section>
+
+          <section class="screen screen-guide" data-screen="guide">
+            <div class="title-row">
+              <div>
+                <p id="guideEyebrow">초대 상세</p>
+                <h1 id="guideTitle">볼디네 집에 놀러오기</h1>
+              </div>
+              <button class="text-icon-button" type="button" data-go="date">날짜 변경</button>
+            </div>
+
+            <div class="schedule-grid">
+              <div>
+                <span>날짜</span>
+                <strong id="guideDate">5월 16일(토)</strong>
+              </div>
+              <div class="night-pill">초대</div>
+              <div>
+                <span>시간</span>
+                <strong id="guideTime">18:00</strong>
+              </div>
+            </div>
+
+            <section class="content-section first">
+              <h2 id="guideNoticeTitle">알아두면 좋아요</h2>
+              <ul class="notice-list" id="guideNoticeList">
+                <li></li>
+                <li></li>
+                <li></li>
+              </ul>
+            </section>
+
+            <button class="primary-button bottom-action" type="button" data-go="info">내 정보 남기기</button>
+          </section>
+
+          <section class="screen screen-info" data-screen="info">
+            <div class="section-heading">
+              <h1 id="infoTitle">누가 오는지 알려줘</h1>
+              <span id="infoSubtitle">호스트에게만 보여요</span>
+            </div>
+
+            <form class="booking-form">
+              <label>
+                <span>이름</span>
+                <input type="text" value="김친구" autocomplete="name" />
+              </label>
+              <label>
+                <span>연락처</span>
+                <input type="tel" value="010-1234-5678" autocomplete="tel" />
+              </label>
+              <label>
+                <span>오는 인원</span>
+                <select id="guestCount">
+                  <option value="1">1명</option>
+                  <option value="2" selected>2명</option>
+                  <option value="3">3명</option>
+                  <option value="4">4명</option>
+                </select>
+              </label>
+              <div class="companion-fields" id="companionFields"></div>
+              <label>
+                <span>추천 메뉴</span>
+                <textarea rows="3">따뜻한 파스타나 간단한 안주가 좋아요.</textarea>
+              </label>
+              <label>
+                <span>부탁사항</span>
+                <textarea rows="4">근처 역에서 만나서 같이 가면 좋아요.</textarea>
+              </label>
+            </form>
+
+            <div class="segmented" role="group" aria-label="오는 방법">
+              <button type="button" class="is-active" data-arrival="transit">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 4h12a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2ZM8 20l2-2M16 18l2 2M7 9h10" />
+                </svg>
+                대중교통
+              </button>
+              <button type="button" data-arrival="car">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 17h16M6 17V9l2-4h8l2 4v8M8 20h.01M16 20h.01M7 12h10" />
+                </svg>
+                자가
+              </button>
+              <button type="button" data-arrival="walk">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M13 5a2 2 0 1 0-2-2 2 2 0 0 0 2 2ZM7 21l3-7 2-3 3 3v7M10 14l-3-2 2-4 4-1 3 3 2 1" />
+                </svg>
+                도보
+              </button>
+            </div>
+            <p class="arrival-note" id="arrivalNote"></p>
+
+            <label class="check-row">
+              <input type="checkbox" checked />
+              <span>방문 하루 전 알림을 받을게요.</span>
+            </label>
+
+            <details class="accordion" open>
+              <summary id="friendGuideTitle">친구 약속 안내</summary>
+              <ul id="friendGuideList">
+                <li></li>
+                <li></li>
+                <li></li>
+              </ul>
+            </details>
+
+            <button class="primary-button bottom-action" type="button" data-complete>초대 확정하기</button>
+          </section>
+
+          <section class="screen screen-complete" data-screen="complete">
+            <div class="completion">
+              <div class="checkmark">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+              </div>
+              <h1 id="completeTitle">놀러오는 약속이 잡혔어요!</h1>
+              <p id="completeSubtitle">볼디에게 방문 정보가 전달되었습니다.</p>
+              <a class="wallet-button" id="calendarLink" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M7 3v3M17 3v3M4 9h16M5 5h14v15H5z" />
+                </svg>
+                캘린더에 저장하기
+              </a>
+            </div>
+
+            <div class="summary-card">
+              <div class="schedule-grid">
+                <div>
+                  <span>날짜</span>
+                  <strong id="completeDate">5월 16일(토)</strong>
+                </div>
+                <div class="night-pill">확정</div>
+                <div>
+                  <span>시간</span>
+                  <strong id="completeTime">18:00</strong>
+                </div>
+              </div>
+              <div class="price-table compact-table">
+                <span>장소</span>
+                <strong>목동중앙본로 7길 23, 301호</strong>
+                <span>오는 방법</span>
+                <strong id="completeArrival">대중교통</strong>
+                <span>인원</span>
+                <strong id="completeGuests">2명</strong>
+              </div>
+            </div>
+
+            <button class="primary-button bottom-action" type="button" data-go="date">다른 날짜 보기</button>
+          </section>
+        </section>
+
+        <aside class="desktop-summary" aria-label="초대 요약">
+          <div class="summary-visual"></div>
+          <div class="summary-copy">
+            <span>볼디네 집 초대</span>
+            <h2>저녁 먹고 수다 떨기</h2>
+            <p id="sideSchedule">5월 16일(토) 18:00 · 목동중앙본로 7길 23, 301호</p>
+          </div>
+          <div class="summary-list">
+            <div>
+              <span>약속</span>
+              <strong>편하게 쉬기</strong>
+            </div>
+            <div>
+              <span>주소 공개</span>
+              <strong>확정 후 안내</strong>
+            </div>
+            <div>
+              <span>마감</span>
+              <strong>밤 11시 전</strong>
+            </div>
+          </div>
+        </aside>
+      </main>
+
+      <div class="admin-backdrop" data-admin-close hidden></div>
+      <section class="admin-panel" aria-modal="true" role="dialog" aria-labelledby="adminTitle" hidden>
+        <div class="admin-header">
+          <div>
+            <span>관리자 모드</span>
+            <h2 id="adminTitle">방문 가능 날짜 관리</h2>
+          </div>
+          <button class="icon-button" type="button" data-admin-close aria-label="관리자 모드 닫기">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 6 6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="admin-month">
+          <button class="icon-button small" type="button" data-admin-month="prev" aria-label="관리 이전 달">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <strong id="adminMonthLabel">2026년 5월</strong>
+          <button class="icon-button small" type="button" data-admin-month="next" aria-label="관리 다음 달">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9 6l6 6-6 6" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="weekday-row" aria-hidden="true">
+          <span>일</span>
+          <span>월</span>
+          <span>화</span>
+          <span>수</span>
+          <span>목</span>
+          <span>금</span>
+          <span>토</span>
+        </div>
+        <div class="admin-calendar-grid" id="adminCalendarGrid"></div>
+
+        <form class="admin-form">
+          <section class="admin-section">
+            <h3>운영 규칙</h3>
+            <div class="admin-rule-grid">
+              <label>
+                <span>평일 시작</span>
+                <select id="weekdayStartInput"></select>
+              </label>
+              <label>
+                <span>주말/공휴일 시작</span>
+                <select id="holidayStartInput"></select>
+              </label>
+              <label>
+                <span>마감 시간</span>
+                <select id="endTimeInput"></select>
+              </label>
+            </div>
+          </section>
+
+          <section class="admin-section">
+            <h3>선택한 날짜</h3>
+            <input id="adminDateInput" type="text" readonly />
+            <div class="admin-toggle-row">
+              <label>
+                <input id="holidayToggle" type="checkbox" />
+                공휴일로 설정
+              </label>
+              <label>
+                <input id="blockedToggle" type="checkbox" />
+                예약 불가
+              </label>
+              <label>
+                <input id="bookedToggle" type="checkbox" />
+                예약 완료
+              </label>
+            </div>
+            <p id="adminDateSummary"></p>
+          </section>
+
+          <section class="admin-section">
+            <h3>다수 날짜 처리</h3>
+            <p>선택한 날짜부터 여러 날짜를 한 번에 예약 불가로 바꿀 수 있어요. 지난 날짜는 자동으로 제외됩니다.</p>
+            <div class="admin-actions">
+              <button class="secondary-button" type="button" data-admin-block-range="7">7일 막기</button>
+              <button class="secondary-button" type="button" data-admin-block-month>이번 달 남은 날짜 막기</button>
+            </div>
+          </section>
+
+          <details class="admin-section admin-common-section">
+            <summary>
+              <span>
+                <strong>공통 화면 문구</strong>
+                <small>모든 날짜에 적용</small>
+              </span>
+            </summary>
+            <label>
+              <span>날짜 페이지 제목</span>
+              <input id="datePageTitleInput" type="text" />
+            </label>
+            <label>
+              <span>날짜 페이지 보조문구</span>
+              <input id="datePageSubtitleInput" type="text" />
+            </label>
+            <label>
+              <span>초대 카드 라벨</span>
+              <input id="inviteEyebrowInput" type="text" />
+            </label>
+            <label>
+              <span>초대 카드 제목</span>
+              <input id="inviteTitleInput" type="text" />
+            </label>
+            <label>
+              <span>안내 페이지 라벨</span>
+              <input id="guideEyebrowInput" type="text" />
+            </label>
+            <label>
+              <span>안내 페이지 제목</span>
+              <input id="guideTitleInput" type="text" />
+            </label>
+            <label>
+              <span>집 안내 제목</span>
+              <input id="guideNoticeTitleInput" type="text" />
+            </label>
+            <label>
+              <span>집 안내 내용</span>
+              <textarea id="guideNoticeInput" rows="4"></textarea>
+            </label>
+            <label>
+              <span>친구 약속 안내 제목</span>
+              <input id="friendGuideTitleInput" type="text" />
+            </label>
+            <label>
+              <span>친구 약속 안내 내용</span>
+              <textarea id="friendGuideInput" rows="4"></textarea>
+            </label>
+            <label>
+              <span>정보 페이지 제목</span>
+              <input id="infoTitleInput" type="text" />
+            </label>
+            <label>
+              <span>정보 페이지 보조문구</span>
+              <input id="infoSubtitleInput" type="text" />
+            </label>
+            <label>
+              <span>완료 페이지 제목</span>
+              <input id="completeTitleInput" type="text" />
+            </label>
+            <label>
+              <span>완료 페이지 보조문구</span>
+              <input id="completeSubtitleInput" type="text" />
+            </label>
+            <label>
+              <span>대중교통 주의사항</span>
+              <textarea id="transitNoteInput" rows="2"></textarea>
+            </label>
+            <label>
+              <span>자가 주의사항</span>
+              <textarea id="carNoteInput" rows="2"></textarea>
+            </label>
+            <label>
+              <span>도보 주의사항</span>
+              <textarea id="walkNoteInput" rows="2"></textarea>
+            </label>
+          </details>
+
+          <div class="admin-actions">
+            <button class="secondary-button" type="button" data-admin-reset>초기화</button>
+            <button class="primary-button" type="button" data-admin-save>저장</button>
+          </div>
+          <p class="save-status" id="adminSaveStatus" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <div class="confirm-backdrop" data-confirm-cancel hidden></div>
+      <section class="confirm-modal" aria-modal="true" role="dialog" hidden>
+        <h2>이미 함께 잡힌 약속일 수 있어요</h2>
+        <p>동행인 이름이 입력되어 있어요. 동행인이 따로 신청하려는 경우라면 기존 약속과 중복되지 않는지 확인해주세요.</p>
+        <div class="admin-actions">
+          <button class="secondary-button" type="button" data-confirm-cancel>돌아가기</button>
+          <button class="primary-button" type="button" data-confirm-submit>그래도 확정</button>
+        </div>
+      </section>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
