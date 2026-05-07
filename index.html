@@ -6,7 +6,7 @@
     <title>건이블링</title>
     <!-- Open Graph Meta Tags for social sharing -->
     <meta property="og:title" content="종건이 집들이 가기" />
-    <meta property="og:description" content="이번 달 남은 일정 n개" id="ogDescription" />
+    <meta property="og:description" content="이번 달 남은 일정을 확인하고 예약하세요!" id="ogDescription" />
     <meta property="og:image" content="https://whdrjs.github.io/Starhills26JK/share-image.jpg" /> 
     <meta property="og:url" content="https://whdrjs.github.io/Starhills26JK/" /> 
     <meta property="og:type" content="website" />
@@ -53,9 +53,7 @@
             <article class="invite-card">
               <div class="home-visual">
                 <div class="window-card">
-                  <span id="inviteEyebrow">볼디네 집 초대</span>
-                  <strong id="inviteTitle">저녁 먹고 수다 떨기</strong>
-                  <ul class="meta-list overlay-list">
+                  <ul class="meta-list" style="margin-top: 0;">
                     <li>
                       <svg viewBox="0 0 24 24" aria-hidden="true">
                         <path d="M7 3v3M17 3v3M4 9h16M5 5h14v15H5z" />
@@ -176,11 +174,7 @@
 
             <details class="accordion" open>
               <summary id="friendGuideTitle">친구 약속 안내</summary>
-              <ul id="friendGuideList">
-                <li></li>
-                <li></li>
-                <li></li>
-              </ul>
+              <ul id="friendGuideList"></ul>
             </details>
 
             <button class="primary-button bottom-action" type="button" data-complete>초대 확정하기</button>
@@ -227,11 +221,7 @@
 
             <section class="content-section">
               <h2 id="guideNoticeTitle">알아두면 좋아요</h2>
-              <ul class="notice-list" id="guideNoticeList">
-                <li></li>
-                <li></li>
-                <li></li>
-              </ul>
+              <ul class="notice-list" id="guideNoticeList"></ul>
             </section>
 
             <button class="primary-button bottom-action" type="button" data-go="date">다른 날짜 보기</button>
@@ -361,6 +351,10 @@
               </span>
             </summary>
             <label>
+              <span>배경 이미지 URL</span>
+              <input id="bgImageInput" type="text" placeholder="https://images.unsplash.com/..." />
+            </label>
+            <label>
               <span>날짜 페이지 제목</span>
               <input id="datePageTitleInput" type="text" />
             </label>
@@ -390,7 +384,7 @@
             </label>
             <label>
               <span>집 안내 내용</span>
-              <textarea id="guideNoticeInput" rows="4"></textarea>
+              <textarea id="guideNoticeInput" rows="4" placeholder="항목당 한 줄씩 입력하세요."></textarea>
             </label>
             <label>
               <span>친구 약속 안내 제목</span>
@@ -398,7 +392,7 @@
             </label>
             <label>
               <span>친구 약속 안내 내용</span>
-              <textarea id="friendGuideInput" rows="4"></textarea>
+              <textarea id="friendGuideInput" rows="4" placeholder="항목당 한 줄씩 입력하세요."></textarea>
             </label>
             <label>
               <span>정보 페이지 제목</span>

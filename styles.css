@@ -4,20 +4,20 @@
   color-scheme: light;
   --bg: #ffffff;
   --panel: #ffffff;
-  --ink: #1a1c2d;
-  --muted: #6e7592;
-  --line: #eff1f9;
-  --soft: #f8f9ff;
-  --soft-2: #fff3e9;
-  --accent: #e2e4ff;
-  --accent-strong: #c9cdff;
-  --action: #605eff;
-  --secondary: #ffe5ce;
-  --green: #605eff;
-  --mint: #e2e4ff;
-  --gold: #ff9d42;
-  --shadow: 0 18px 46px rgba(42, 32, 20, 0.12);
-  --dark-blue: #3b3484;
+  --ink: #1a1c2d;          /* 기본 텍스트 */
+  --muted: #6e7592;        /* 부가 설명 */
+  --line: #e9e8f0;         /* 비활성화 및 경계선 (Disabled Gray) */
+  --soft: #f4f7ff;         /* 메인 블루 연한 틴트 */
+  --soft-2: #fff5f2;       /* 보조색 1 연한 틴트 */
+  --accent: #e9f9eb;       /* 보조색 2 연한 틴트 (Available 배경) */
+  --accent-strong: #d2f2d6;/* 보조색 2 중간 틴트 (Available 테두리) */
+  --action: #1770fa;       /* 메인 컬러 */
+  --secondary: #f75428;    /* 보조색 1 (주말/공휴일) */
+  --green: #45c656;        /* 보조색 2 (예약 가능 상태) */
+  --mint: #e9f9eb;         /* 보조색 2 틴트 */
+  --gold: #f75428;         /* 보조색 1과 통일 */
+  --shadow: 0 12px 30px rgba(23, 112, 250, 0.1);
+  --dark-blue: #1770fa;    /* 메인 컬러와 통일 */
 }
 
 * {
@@ -121,7 +121,7 @@ svg {
 }
 
 .icon-button:hover {
-  background: #eee8df;
+  background: #f1f3f9;
 }
 
 .stepper {
@@ -239,41 +239,13 @@ h2 {
   position: relative;
   min-height: 202px;
   overflow: hidden;
-  background:
+  background-image: 
+    var(--custom-bg, none),
     linear-gradient(135deg, rgba(255, 255, 255, 0.84), transparent 44%),
     radial-gradient(circle at 72% 24%, var(--secondary), transparent 40%),
     linear-gradient(145deg, #ffffff 0%, var(--accent) 52%, var(--action) 100%);
-}
-
-.home-visual::before,
-.hero-visual::before,
-.summary-visual::before {
-  content: "";
-  position: absolute;
-  inset: 30px 28px;
-  border-radius: 18px;
-  background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.6) 1px, transparent 1px) 0 0 / 34px 34px,
-    linear-gradient(rgba(255, 255, 255, 0.56) 1px, transparent 1px) 0 0 / 34px 34px,
-    rgba(255, 255, 255, 0.22);
-  border: 1px solid rgba(255, 255, 255, 0.72);
-}
-
-.home-visual::after,
-.hero-visual::after,
-.summary-visual::after {
-  content: "";
-  position: absolute;
-  width: 126px;
-  height: 82px;
-  right: 34px;
-  bottom: 30px;
-  border-radius: 20px;
-  background: 
-    linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.4)),
-    linear-gradient(135deg, var(--secondary), var(--accent));
-  border: 1px solid rgba(255, 255, 255, 0.82);
-  box-shadow: 0 14px 30px rgba(42, 32, 20, 0.12);
+  background-size: cover;
+  background-position: center;
 }
 
 .window-card {
@@ -382,7 +354,7 @@ h2 {
 .weekday-row span:nth-child(1), /* 일요일 */
 .weekday-row span:nth-child(6), /* 금요일 */
 .weekday-row span:nth-child(7) /* 토요일 */ {
-  color: var(--dark-blue);
+  color: var(--secondary);
 }
 
 
@@ -397,8 +369,8 @@ h2 {
 }
 
 .calendar-grid .outside-month {
-  color: #d2cbc1;
-  background: #f8f6f1;
+  color: #b0b4c1;
+  background: #ffffff;
   font-weight: 900;
 }
 
@@ -416,7 +388,7 @@ h2 {
 }
 
 .calendar-grid button.holiday {
-  color: var(--dark-blue);
+  color: var(--secondary);
 }
 
 .calendar-grid button.selected {
@@ -427,9 +399,9 @@ h2 {
 
 .calendar-grid button:disabled {
   cursor: not-allowed;
-  color: #c7c0b6;
+  color: #b0b4c1;
   border-color: transparent;
-  background: #f8f5f0;
+  background: #f4f4f7;
 }
 
 .time-card h2 {
@@ -485,7 +457,7 @@ h2 {
 }
 
 .primary-button:hover {
-  background: #4f46e5;
+  background: #0056d2;
 }
 
 .secondary-button {
@@ -497,7 +469,7 @@ h2 {
 .bottom-action {
   position: sticky;
   bottom: 18px;
-  box-shadow: 0 12px 26px rgba(96, 94, 255, 0.22);
+  box-shadow: 0 12px 26px rgba(23, 112, 250, 0.2);
 }
 
 .hero-visual {
@@ -572,8 +544,8 @@ h2 {
   place-self: center;
   padding: 8px 9px;
   border-radius: 12px;
-  color: var(--dark-blue);
-  background: var(--secondary);
+  color: #ffffff;
+  background: var(--action);
   font-size: 12px;
   font-weight: 900;
 }
@@ -640,7 +612,7 @@ h2 {
   padding: 15px 14px;
   color: var(--ink);
   background: #fff;
-  font-weight: 800;
+  font-weight: 500; /* Medium */
 }
 
 .booking-form textarea {
@@ -764,7 +736,7 @@ h2 {
 }
 
 .checkmark svg {
-  width: 38px;
+  width: 38px; /* 기존 값 유지 */
   height: 38px;
   stroke-width: 2.4; /* 기존 값 유지 */
 }
@@ -926,8 +898,8 @@ h2 {
 
 .admin-calendar-grid button {
   border: 1px solid transparent;
-  color: #877f74;
-  background: #f8f6f1;
+  color: var(--muted);
+  background: #f4f4f7;
 }
 
 .admin-calendar-grid button.open {
@@ -937,7 +909,7 @@ h2 {
 }
 
 .admin-calendar-grid button.holiday {
-  color: var(--dark-blue);
+  color: var(--secondary);
   border-color: var(--secondary);
 }
 
@@ -948,16 +920,16 @@ h2 {
 }
 
 .admin-calendar-grid button.blocked {
-  color: #b7afa5;
-  background: #f0eee9;
+  color: #b0b4c1;
+  background: var(--line);
   text-decoration: line-through;
 }
 
 .admin-calendar-grid button.past {
   cursor: not-allowed;
-  color: #cfc8bd;
+  color: #d1d5db;
   border-color: transparent;
-  background: #faf8f4;
+  background: #f9fafb;
 }
 
 .admin-calendar-grid button.selected {
@@ -966,8 +938,8 @@ h2 {
 }
 
 .admin-calendar-grid .outside-month {
-  color: #d2cbc1;
-  background: #faf8f4;
+  color: #d1d5db;
+  background: #ffffff;
 }
 
 .admin-form {

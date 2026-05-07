@@ -37,6 +37,7 @@ const defaultConfig = {
   blocked: [],
   booked: [],
   content: {
+    bgImage: "",
     datePageTitle: "언제 놀러올래?",
     datePageSubtitle: "클릭 가능한 날만 선택돼요",
     inviteEyebrow: "볼디네 집 초대",
@@ -289,6 +290,11 @@ function countAvailableSlotsInMonth(monthDate) {
 
 
 function syncContent() {
+  const bgUrl = config.content.bgImage ? `url("${config.content.bgImage}")` : 'none';
+  document.querySelectorAll('.home-visual, .hero-visual, .summary-visual').forEach(el => {
+    el.style.setProperty('--custom-bg', bgUrl);
+  });
+
   setText("datePageTitle", config.content.datePageTitle);
   setText("datePageSubtitle", config.content.datePageSubtitle);
   setText("inviteEyebrow", config.content.inviteEyebrow);
@@ -432,6 +438,7 @@ function openAdminPanel() {
   fillTimeSelect(document.getElementById("weekdayStartInput"), config.rules.weekdayStart);
   fillTimeSelect(document.getElementById("holidayStartInput"), config.rules.holidayStart);
   fillTimeSelect(document.getElementById("endTimeInput"), config.rules.end);
+  setInputValue("bgImageInput", config.content.bgImage || "");
   setInputValue("guideNoticeTitleInput", config.content.guideNoticeTitle);
   setInputValue("datePageTitleInput", config.content.datePageTitle);
   setInputValue("datePageSubtitleInput", config.content.datePageSubtitle);
@@ -470,6 +477,7 @@ function saveAdminSettings() {
   config.rules.weekdayStart = document.getElementById("weekdayStartInput").value;
   config.rules.holidayStart = document.getElementById("holidayStartInput").value;
   config.rules.end = document.getElementById("endTimeInput").value;
+  config.content.bgImage = document.getElementById("bgImageInput").value.trim();
   config.content.datePageTitle = document.getElementById("datePageTitleInput").value.trim() || defaultConfig.content.datePageTitle;
   config.content.datePageSubtitle = document.getElementById("datePageSubtitleInput").value.trim() || defaultConfig.content.datePageSubtitle;
   config.content.inviteEyebrow = document.getElementById("inviteEyebrowInput").value.trim() || defaultConfig.content.inviteEyebrow;
