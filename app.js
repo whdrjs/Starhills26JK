@@ -15,14 +15,17 @@ let adminTapTimer;
 
 const titles = {
   date: "날짜 선택",
-  guide: "집 안내",
   info: "방문 정보",
   complete: "약속 완료",
 };
 
 const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
 const STORAGE_KEY = "homeInviteAdminConfig";
-const TODAY_KEY = "2026-05-06";
+
+const TODAY_KEY = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Asia/Seoul",
+  year: "numeric", month: "2-digit", day: "2-digit"
+}).format(new Date());
 
 const defaultConfig = {
   rules: {
@@ -66,10 +69,12 @@ const defaultConfig = {
 
 let config = loadConfig();
 
+const [tYear, tMonth] = TODAY_KEY.split("-").map(Number);
+
 const state = {
   step: "date",
-  month: new Date(2026, 4, 1),
-  dateKey: "2026-05-16",
+  month: new Date(tYear, tMonth - 1, 1),
+  dateKey: TODAY_KEY,
   time: "18:00",
   arrival: "대중교통",
   arrivalKey: "transit",
@@ -266,6 +271,23 @@ function renderLines(listId, lines) {
   });
 }
 
+function countAvailableSlotsInMonth(monthDate) {
+  const year = monthDate.getFullYear();
+  const month = monthDate.getMonth();
+  const lastDate = new Date(year, month + 1, 0).getDate();
+  let availableCount = 0;
+
+  for (let date = 1; date <= lastDate; date += 1) {
+    const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
+    if (availableTimesFor(key).length > 0) {
+      availableCount += 1;
+    }
+  }
+  return availableCount;
+}
+
+
+
 function syncContent() {
   setText("datePageTitle", config.content.datePageTitle);
   setText("datePageSubtitle", config.content.datePageSubtitle);
@@ -302,6 +324,15 @@ function syncCalendarLink() {
   link.href = `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
+function updateMetaTags() {
+  const availableDays = countAvailableSlotsInMonth(state.month);
+  const description = `이번 달 남은 일정 ${availableDays}개`;
+
+  document.getElementById('ogDescription').setAttribute('content', description);
+  document.getElementById('twitterDescription').setAttribute('content', description);
+}
+
+
 function syncUI() {
   if (state.step !== "complete") ensureSelectedDateIsAvailable();
   const formattedDate = formatDate(state.dateKey);
@@ -326,6 +357,7 @@ function syncUI() {
   renderCompanions();
   syncContent();
   syncCalendarLink();
+  updateMetaTags();
 }
 
 function renderCompanions() {
@@ -510,6 +542,46 @@ function blockRemainingMonth() {
   renderAdminCalendar();
 }
 
+function blockWeekdaysInMonth() {
+  const cursor = dateFromKey(adminState.dateKey);
+  const month = cursor.getMonth();
+  let count = 0;
+  while (cursor.getMonth() === month) {
+    const day = cursor.getDay();
+    if (day >= 1 && day <= 5) {
+      const key = keyFromDate(cursor);
+      if (!isPastDate(key)) {
+        config.blocked = toggleListValue(config.blocked, key, true);
+        config.booked = toggleListValue(config.booked, key, false);
+        count += 1;
+      }
+    }
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  saveConfig();
+  showSaveStatus(`남은 평일 ${count}개를 예약 불가로 저장했어요.`);
+  syncUI();
+  renderAdminCalendar();
+}
+
+function blockRelativeRange(rangeStr) {
+  const [start, end] = rangeStr.split(",").map(Number);
+  const base = dateFromKey(adminState.dateKey);
+  for (let i = start; i <= end; i += 1) {
+    const d = new Date(base);
+    d.setDate(base.getDate() + i);
+    const key = keyFromDate(d);
+    if (!isPastDate(key)) {
+      config.blocked = toggleListValue(config.blocked, key, true);
+      config.booked = toggleListValue(config.booked, key, false);
+    }
+  }
+  saveConfig();
+  showSaveStatus(`선택일 기준 범위를 예약 불가로 저장했어요.`);
+  syncUI();
+  renderAdminCalendar();
+}
+
 function go(step) {
   state.step = step;
   syncUI();
@@ -589,6 +661,17 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  if (event.target.closest("[data-admin-block-weekdays]")) {
+    blockWeekdaysInMonth();
+    return;
+  }
+
+  const relativeButton = event.target.closest("[data-admin-block-relative]");
+  if (relativeButton) {
+    blockRelativeRange(relativeButton.dataset.adminBlockRelative);
+    return;
+  }
+
   if (event.target.closest("[data-admin-save]")) {
     saveAdminSettings();
     return;
@@ -616,7 +699,7 @@ document.addEventListener("click", (event) => {
   }
 
   if (event.target.closest("[data-action='back']")) {
-    const order = ["date", "guide", "info", "complete"];
+    const order = ["date", "info", "complete"];
     const index = order.indexOf(state.step);
     go(order[Math.max(index - 1, 0)]);
     return;

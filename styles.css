@@ -1,19 +1,23 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+
 :root {
   color-scheme: light;
-  --bg: #f0eee9;
+  --bg: #ffffff;
   --panel: #ffffff;
-  --ink: #171717;
-  --muted: #6f6a63;
-  --line: #e4ded5;
-  --soft: #f8f6f1;
-  --soft-2: #d0e6f2;
-  --accent: #d0e6f2;
-  --accent-strong: #b9d8e8;
-  --action: #345d70;
-  --green: #306c48;
-  --mint: #c1e5c8;
-  --gold: #b8893c;
+  --ink: #1a1c2d;
+  --muted: #6e7592;
+  --line: #eff1f9;
+  --soft: #f8f9ff;
+  --soft-2: #fff3e9;
+  --accent: #e2e4ff;
+  --accent-strong: #c9cdff;
+  --action: #605eff;
+  --secondary: #ffe5ce;
+  --green: #605eff;
+  --mint: #e2e4ff;
+  --gold: #ff9d42;
   --shadow: 0 18px 46px rgba(42, 32, 20, 0.12);
+  --dark-blue: #3b3484;
 }
 
 * {
@@ -29,7 +33,7 @@ body {
   margin: 0;
   color: var(--ink);
   font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Roboto, sans-serif;
+    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", Roboto, sans-serif;
   letter-spacing: 0;
 }
 
@@ -69,9 +73,14 @@ svg {
   align-items: center;
   justify-content: space-between;
   padding: 10px clamp(16px, 4vw, 34px);
-  border-bottom: 1px solid rgba(228, 222, 213, 0.72);
-  background: rgba(240, 238, 233, 0.92);
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(18px);
+}
+
+/* 첫 번째 단계(날짜 선택)에서는 뒤로가기 버튼을 숨깁니다. */
+.app[data-step="date"] [data-action="back"] {
+  visibility: hidden;
 }
 
 .topbar-title {
@@ -140,9 +149,9 @@ svg {
 }
 
 .step-pill.is-active {
-  color: #173243;
-  border-color: var(--accent);
-  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--action);
+  background: var(--action);
 }
 
 .layout {
@@ -232,8 +241,8 @@ h2 {
   overflow: hidden;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.84), transparent 44%),
-    radial-gradient(circle at 72% 24%, rgba(208, 230, 242, 0.82), transparent 27%),
-    linear-gradient(145deg, #f0eee9 0%, #c1e5c8 52%, #d0e6f2 100%);
+    radial-gradient(circle at 72% 24%, var(--secondary), transparent 40%),
+    linear-gradient(145deg, #ffffff 0%, var(--accent) 52%, var(--action) 100%);
 }
 
 .home-visual::before,
@@ -260,9 +269,9 @@ h2 {
   right: 34px;
   bottom: 30px;
   border-radius: 20px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.38)),
-    linear-gradient(135deg, rgba(193, 229, 200, 0.72), rgba(208, 230, 242, 0.86));
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.4)),
+    linear-gradient(135deg, var(--secondary), var(--accent));
   border: 1px solid rgba(255, 255, 255, 0.82);
   box-shadow: 0 14px 30px rgba(42, 32, 20, 0.12);
 }
@@ -282,7 +291,7 @@ h2 {
 }
 
 .window-card span {
-  color: var(--green);
+  color: var(--dark-blue);
   font-size: 12px;
   font-weight: 900;
 }
@@ -298,7 +307,7 @@ h2 {
 }
 
 .invite-copy p {
-  color: var(--green);
+  color: var(--muted);
   font-size: 13px;
   font-weight: 900;
 }
@@ -359,7 +368,7 @@ h2 {
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 6px;
+  gap: 10px 6px;
 }
 
 .weekday-row {
@@ -370,11 +379,19 @@ h2 {
   text-align: center;
 }
 
+.weekday-row span:nth-child(1), /* 일요일 */
+.weekday-row span:nth-child(6), /* 금요일 */
+.weekday-row span:nth-child(7) /* 토요일 */ {
+  color: var(--dark-blue);
+}
+
+
 .calendar-grid button,
 .calendar-grid span {
-  aspect-ratio: 1;
-  min-width: 0;
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  justify-self: center;
+  border-radius: 50%;
   display: grid;
   place-items: center;
 }
@@ -388,20 +405,24 @@ h2 {
 .calendar-grid button {
   border: 1px solid #e9e3da;
   background: #fff;
-  color: #2b2926;
+  color: var(--ink);
   font-size: 15px;
   font-weight: 900;
 }
 
 .calendar-grid button.available {
-  border-color: #8bbfd0;
-  background: var(--soft-2);
+  border-color: var(--accent-strong);
+  background: var(--accent);
+}
+
+.calendar-grid button.holiday {
+  color: var(--dark-blue);
 }
 
 .calendar-grid button.selected {
-  color: #173243;
-  border-color: #82b8c9;
-  background: linear-gradient(180deg, var(--accent), #c1e5c8);
+  color: #ffffff;
+  border-color: var(--action);
+  background: var(--action);
 }
 
 .calendar-grid button:disabled {
@@ -443,9 +464,9 @@ h2 {
 }
 
 .time-options button.is-active {
-  color: #173243;
-  border-color: #82b8c9;
-  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--action);
+  background: var(--action);
 }
 
 .primary-button,
@@ -459,12 +480,12 @@ h2 {
 
 .primary-button {
   margin-top: 18px;
-  color: #fff;
+  color: #ffffff;
   background: var(--action);
 }
 
 .primary-button:hover {
-  background: #294d5e;
+  background: #4f46e5;
 }
 
 .secondary-button {
@@ -476,7 +497,7 @@ h2 {
 .bottom-action {
   position: sticky;
   bottom: 18px;
-  box-shadow: 0 12px 26px rgba(52, 93, 112, 0.22);
+  box-shadow: 0 12px 26px rgba(96, 94, 255, 0.22);
 }
 
 .hero-visual {
@@ -499,7 +520,7 @@ h2 {
 }
 
 .home-hero span {
-  color: var(--green);
+  color: var(--dark-blue);
   font-size: 12px;
   font-weight: 900;
 }
@@ -523,8 +544,8 @@ h2 {
   border: 1px solid var(--line);
   border-radius: 999px;
   padding: 0 13px;
-  background: #fff;
-  color: var(--green);
+  background: var(--soft);
+  color: var(--muted);
   font-size: 13px;
   font-weight: 900;
 }
@@ -551,8 +572,8 @@ h2 {
   place-self: center;
   padding: 8px 9px;
   border-radius: 12px;
-  color: var(--green);
-  background: var(--mint);
+  color: var(--dark-blue);
+  background: var(--secondary);
   font-size: 12px;
   font-weight: 900;
 }
@@ -653,9 +674,9 @@ h2 {
 }
 
 .segmented button.is-active {
-  color: #173243;
-  border-color: #82b8c9;
-  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--action);
+  background: var(--action);
 }
 
 .companion-fields {
@@ -684,8 +705,8 @@ h2 {
   border: 1px solid var(--line);
   border-radius: 10px;
   padding: 14px;
-  color: #384850;
-  background: var(--soft-2);
+  color: var(--dark-blue);
+  background: var(--accent);
   font-weight: 800;
   line-height: 1.45;
 }
@@ -699,8 +720,8 @@ h2 {
 }
 
 .check-row input {
-  width: 22px;
-  height: 22px;
+  width: 22px; /* 기존 값 유지 */
+  height: 22px; /* 기존 값 유지 */
   accent-color: var(--action);
 }
 
@@ -738,14 +759,14 @@ h2 {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  color: #fff;
+  color: #ffffff;
   background: var(--action);
 }
 
 .checkmark svg {
   width: 38px;
   height: 38px;
-  stroke-width: 2.4;
+  stroke-width: 2.4; /* 기존 값 유지 */
 }
 
 .wallet-button {
@@ -803,7 +824,7 @@ h2 {
 }
 
 .summary-copy span {
-  color: var(--green);
+  color: var(--muted);
   font-size: 13px;
   font-weight: 900;
 }
@@ -888,14 +909,16 @@ h2 {
 .admin-calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 6px;
+  gap: 10px 6px;
   margin-bottom: 18px;
 }
 
 .admin-calendar-grid button,
 .admin-calendar-grid span {
-  aspect-ratio: 1;
-  border-radius: 10px;
+  width: 34px;
+  height: 34px;
+  justify-self: center;
+  border-radius: 50%;
   display: grid;
   place-items: center;
   font-weight: 900;
@@ -914,13 +937,14 @@ h2 {
 }
 
 .admin-calendar-grid button.holiday {
-  border-color: #8cc89b;
+  color: var(--dark-blue);
+  border-color: var(--secondary);
 }
 
 .admin-calendar-grid button.booked {
-  color: #fff;
-  border-color: #345d70;
-  background: #345d70;
+  color: var(--ink);
+  border-color: var(--secondary);
+  background: var(--secondary);
 }
 
 .admin-calendar-grid button.blocked {
@@ -937,7 +961,7 @@ h2 {
 }
 
 .admin-calendar-grid button.selected {
-  outline: 3px solid #345d70;
+  outline: 3px solid var(--action);
   outline-offset: 2px;
 }
 
@@ -1057,8 +1081,8 @@ h2 {
 }
 
 .admin-toggle-row input {
-  width: 20px;
-  height: 20px;
+  width: 20px; /* 기존 값 유지 */
+  height: 20px; /* 기존 값 유지 */
   accent-color: var(--action);
 }
 
@@ -1096,6 +1120,58 @@ h2 {
   color: var(--muted);
   line-height: 1.55;
   font-weight: 800;
+}
+
+.auth-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  background: rgba(25, 24, 22, 0.45);
+  backdrop-filter: blur(4px);
+}
+
+.auth-modal {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 120;
+  width: min(320px, calc(100% - 40px));
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 24px;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.auth-modal h2 { font-size: 20px; margin-bottom: 8px; }
+.auth-modal p { color: var(--muted); margin-bottom: 20px; font-weight: 700; }
+
+.admin-password-input {
+  width: 100%;
+  height: 54px;
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  text-align: center;
+  font-size: 24px;
+  letter-spacing: 8px;
+  margin-bottom: 20px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.admin-password-input:focus { border-color: var(--action); }
+
+.auth-modal.shake {
+  animation: shake 0.4s ease-in-out;
+  border-color: #dc2626;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate(-50%, -50%); }
+  20%, 60% { transform: translate(-52%, -50%); }
+  40%, 80% { transform: translate(-48%, -50%); }
 }
 
 @media (max-width: 860px) {
@@ -1159,7 +1235,7 @@ h2 {
 
   .weekday-row,
   .calendar-grid {
-    gap: 4px;
+    gap: 8px 4px;
   }
 
   .calendar-grid button {

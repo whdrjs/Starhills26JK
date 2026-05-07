@@ -3,7 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>우리 집 놀러오기</title>
+    <title>건이블링</title>
+    <!-- Open Graph Meta Tags for social sharing -->
+    <meta property="og:title" content="종건이 집들이 가기" />
+    <meta property="og:description" content="이번 달 남은 일정 n개" id="ogDescription" />
+    <meta property="og:image" content="https://whdrjs.github.io/Starhills26JK/share-image.jpg" /> 
+    <meta property="og:url" content="https://whdrjs.github.io/Starhills26JK/" /> 
+    <meta property="og:type" content="website" />
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="종건이 집들이 가기" />
+    <meta name="twitter:description" content="이번 달 남은 일정 n개" id="twitterDescription" />
+    <meta name="twitter:image" content="https://example.com/your-share-image.jpg" /> <!-- 실제 이미지 URL로 변경해주세요 -->
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -15,7 +26,7 @@
           </svg>
         </button>
         <button class="topbar-title" type="button" data-admin-trigger aria-label="숨겨진 관리자 모드">
-          <span class="eyebrow">우리 집 초대장</span>
+          <span class="eyebrow">건이블링</span>
           <strong id="screenTitle">날짜 선택</strong>
         </button>
         <button class="icon-button" type="button" aria-label="초대 링크 공유">
@@ -27,9 +38,8 @@
 
       <nav class="stepper" aria-label="초대 단계">
         <button type="button" class="step-pill is-active" data-go="date">1 날짜</button>
-        <button type="button" class="step-pill" data-go="guide">2 안내</button>
-        <button type="button" class="step-pill" data-go="info">3 정보</button>
-        <button type="button" class="step-pill" data-go="complete">4 완료</button>
+        <button type="button" class="step-pill" data-go="info">2 정보</button>
+        <button type="button" class="step-pill" data-go="complete">3 완료</button>
       </nav>
 
       <main class="layout">
@@ -99,40 +109,7 @@
               <div class="time-options" id="timeOptions"></div>
             </section>
 
-            <button class="primary-button bottom-action" type="button" data-go="guide">집 안내 보기</button>
-          </section>
-
-          <section class="screen screen-guide" data-screen="guide">
-            <div class="title-row">
-              <div>
-                <p id="guideEyebrow">초대 상세</p>
-                <h1 id="guideTitle">볼디네 집에 놀러오기</h1>
-              </div>
-              <button class="text-icon-button" type="button" data-go="date">날짜 변경</button>
-            </div>
-
-            <div class="schedule-grid">
-              <div>
-                <span>날짜</span>
-                <strong id="guideDate">5월 16일(토)</strong>
-              </div>
-              <div class="night-pill">초대</div>
-              <div>
-                <span>시간</span>
-                <strong id="guideTime">18:00</strong>
-              </div>
-            </div>
-
-            <section class="content-section first">
-              <h2 id="guideNoticeTitle">알아두면 좋아요</h2>
-              <ul class="notice-list" id="guideNoticeList">
-                <li></li>
-                <li></li>
-                <li></li>
-              </ul>
-            </section>
-
-            <button class="primary-button bottom-action" type="button" data-go="info">내 정보 남기기</button>
+            <button class="primary-button bottom-action" type="button" data-go="info">다음</button>
           </section>
 
           <section class="screen screen-info" data-screen="info">
@@ -144,11 +121,11 @@
             <form class="booking-form">
               <label>
                 <span>이름</span>
-                <input type="text" value="김친구" autocomplete="name" />
+                <input type="text" placeholder="김친구" autocomplete="name" />
               </label>
               <label>
                 <span>연락처</span>
-                <input type="tel" value="010-1234-5678" autocomplete="tel" />
+                <input type="tel" placeholder="010-1234-5678" autocomplete="tel" />
               </label>
               <label>
                 <span>오는 인원</span>
@@ -162,11 +139,11 @@
               <div class="companion-fields" id="companionFields"></div>
               <label>
                 <span>추천 메뉴</span>
-                <textarea rows="3">따뜻한 파스타나 간단한 안주가 좋아요.</textarea>
+                <textarea rows="3" placeholder="따뜻한 파스타나 간단한 안주가 좋아요."></textarea>
               </label>
               <label>
                 <span>부탁사항</span>
-                <textarea rows="4">근처 역에서 만나서 같이 가면 좋아요.</textarea>
+                <textarea rows="4" placeholder="근처 역에서 만나서 같이 가면 좋아요."></textarea>
               </label>
             </form>
 
@@ -247,6 +224,15 @@
                 <strong id="completeGuests">2명</strong>
               </div>
             </div>
+
+            <section class="content-section">
+              <h2 id="guideNoticeTitle">알아두면 좋아요</h2>
+              <ul class="notice-list" id="guideNoticeList">
+                <li></li>
+                <li></li>
+                <li></li>
+              </ul>
+            </section>
 
             <button class="primary-button bottom-action" type="button" data-go="date">다른 날짜 보기</button>
           </section>
@@ -360,6 +346,10 @@
             <div class="admin-actions">
               <button class="secondary-button" type="button" data-admin-block-range="7">7일 막기</button>
               <button class="secondary-button" type="button" data-admin-block-month>이번 달 남은 날짜 막기</button>
+              <button class="secondary-button" type="button" data-admin-block-weekdays>남은 평일 막기</button>
+              <button class="secondary-button" type="button" data-admin-block-relative="-3,3">앞뒤 3일 막기</button>
+              <button class="secondary-button" type="button" data-admin-block-relative="0,3">앞으로 3일 막기</button>
+              <button class="secondary-button" type="button" data-admin-block-relative="-3,0">뒤로 3일 막기</button>
             </div>
           </section>
 
@@ -455,6 +445,17 @@
         <div class="admin-actions">
           <button class="secondary-button" type="button" data-confirm-cancel>돌아가기</button>
           <button class="primary-button" type="button" data-confirm-submit>그래도 확정</button>
+        </div>
+      </section>
+
+      <div class="auth-backdrop" data-auth-close hidden></div>
+      <section class="auth-modal" aria-modal="true" role="dialog" hidden>
+        <h2>관리자 인증</h2>
+        <p>비밀번호를 입력하세요.</p>
+        <input type="password" id="adminPasswordInput" class="admin-password-input" placeholder="Password" maxlength="4" />
+        <div class="admin-actions">
+          <button class="secondary-button" type="button" data-auth-close>취소</button>
+          <button class="primary-button" type="button" id="authSubmitBtn">확인</button>
         </div>
       </section>
     </div>
