@@ -15,6 +15,7 @@ let adminTapTimer;
 
 const titles = {
   date: "날짜 선택",
+  guide: "집 안내",
   info: "방문 정보",
   complete: "약속 완료",
 };
@@ -272,29 +273,7 @@ function renderLines(listId, lines) {
   });
 }
 
-function countAvailableSlotsInMonth(monthDate) {
-  const year = monthDate.getFullYear();
-  const month = monthDate.getMonth();
-  const lastDate = new Date(year, month + 1, 0).getDate();
-  let availableCount = 0;
-
-  for (let date = 1; date <= lastDate; date += 1) {
-    const key = `${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`;
-    if (availableTimesFor(key).length > 0) {
-      availableCount += 1;
-    }
-  }
-  return availableCount;
-}
-
-
-
 function syncContent() {
-  const bgUrl = config.content.bgImage ? `url("${config.content.bgImage}")` : 'none';
-  document.querySelectorAll('.home-visual, .hero-visual, .summary-visual').forEach(el => {
-    el.style.setProperty('--custom-bg', bgUrl);
-  });
-
   setText("datePageTitle", config.content.datePageTitle);
   setText("datePageSubtitle", config.content.datePageSubtitle);
   setText("inviteEyebrow", config.content.inviteEyebrow);
@@ -330,15 +309,6 @@ function syncCalendarLink() {
   link.href = `https://calendar.google.com/calendar/render?${params.toString()}`;
 }
 
-function updateMetaTags() {
-  const availableDays = countAvailableSlotsInMonth(state.month);
-  const description = `이번 달 남은 일정 ${availableDays}개`;
-
-  document.getElementById('ogDescription').setAttribute('content', description);
-  document.getElementById('twitterDescription').setAttribute('content', description);
-}
-
-
 function syncUI() {
   if (state.step !== "complete") ensureSelectedDateIsAvailable();
   const formattedDate = formatDate(state.dateKey);
@@ -356,14 +326,12 @@ function syncUI() {
   setText("completeTime", state.time);
   setText("completeArrival", state.arrival);
   setText("completeGuests", state.guests);
-  setText("sideSchedule", `${schedule} · 목동중앙본로 7길 23, 301호`);
 
   renderCalendar();
   renderTimes();
   renderCompanions();
   syncContent();
   syncCalendarLink();
-  updateMetaTags();
 }
 
 function renderCompanions() {
@@ -438,7 +406,6 @@ function openAdminPanel() {
   fillTimeSelect(document.getElementById("weekdayStartInput"), config.rules.weekdayStart);
   fillTimeSelect(document.getElementById("holidayStartInput"), config.rules.holidayStart);
   fillTimeSelect(document.getElementById("endTimeInput"), config.rules.end);
-  setInputValue("bgImageInput", config.content.bgImage || "");
   setInputValue("guideNoticeTitleInput", config.content.guideNoticeTitle);
   setInputValue("datePageTitleInput", config.content.datePageTitle);
   setInputValue("datePageSubtitleInput", config.content.datePageSubtitle);
@@ -477,7 +444,6 @@ function saveAdminSettings() {
   config.rules.weekdayStart = document.getElementById("weekdayStartInput").value;
   config.rules.holidayStart = document.getElementById("holidayStartInput").value;
   config.rules.end = document.getElementById("endTimeInput").value;
-  config.content.bgImage = document.getElementById("bgImageInput").value.trim();
   config.content.datePageTitle = document.getElementById("datePageTitleInput").value.trim() || defaultConfig.content.datePageTitle;
   config.content.datePageSubtitle = document.getElementById("datePageSubtitleInput").value.trim() || defaultConfig.content.datePageSubtitle;
   config.content.inviteEyebrow = document.getElementById("inviteEyebrowInput").value.trim() || defaultConfig.content.inviteEyebrow;
@@ -499,6 +465,17 @@ function saveAdminSettings() {
   showSaveStatus("저장됐어요.");
   syncUI();
   renderAdminCalendar();
+}
+
+function exportConfig() {
+  const configJson = JSON.stringify(config, null, 2);
+  navigator.clipboard.writeText(configJson).then(() => {
+    alert("현재 설정 데이터가 복사되었습니다!\napp.js의 defaultConfig 변수에 이 내용을 덮어씌우면 영구적으로 반영됩니다.");
+  }).catch(err => {
+    console.error('복사 실패:', err);
+    alert("복사에 실패했습니다. 콘솔창을 확인해주세요.");
+    console.log(configJson);
+  });
 }
 
 function resetAdminSettings() {
@@ -685,6 +662,11 @@ document.addEventListener("click", (event) => {
     return;
   }
 
+  if (event.target.closest("[data-admin-export]")) {
+    exportConfig();
+    return;
+  }
+
   if (event.target.closest("[data-admin-reset]")) {
     resetAdminSettings();
     return;
@@ -707,7 +689,7 @@ document.addEventListener("click", (event) => {
   }
 
   if (event.target.closest("[data-action='back']")) {
-    const order = ["date", "info", "complete"];
+    const order = ["date", "guide", "info", "complete"];
     const index = order.indexOf(state.step);
     go(order[Math.max(index - 1, 0)]);
     return;

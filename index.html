@@ -6,14 +6,14 @@
     <title>건이블링</title>
     <!-- Open Graph Meta Tags for social sharing -->
     <meta property="og:title" content="종건이 집들이 가기" />
-    <meta property="og:description" content="이번 달 남은 일정을 확인하고 예약하세요!" id="ogDescription" />
+    <meta property="og:description" content="방문 가능한 날짜를 확인하고 예약해 주세요!" id="ogDescription" />
     <meta property="og:image" content="https://whdrjs.github.io/Starhills26JK/share-image.jpg" /> 
     <meta property="og:url" content="https://whdrjs.github.io/Starhills26JK/" /> 
     <meta property="og:type" content="website" />
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="종건이 집들이 가기" />
-    <meta name="twitter:description" content="이번 달 남은 일정 n개" id="twitterDescription" />
+    <meta name="twitter:description" content="방문 가능한 날짜를 확인하고 예약해 주세요!" id="twitterDescription" />
     <meta name="twitter:image" content="https://example.com/your-share-image.jpg" /> <!-- 실제 이미지 URL로 변경해주세요 -->
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -227,29 +227,6 @@
             <button class="primary-button bottom-action" type="button" data-go="date">다른 날짜 보기</button>
           </section>
         </section>
-
-        <aside class="desktop-summary" aria-label="초대 요약">
-          <div class="summary-visual"></div>
-          <div class="summary-copy">
-            <span>볼디네 집 초대</span>
-            <h2>저녁 먹고 수다 떨기</h2>
-            <p id="sideSchedule">5월 16일(토) 18:00 · 목동중앙본로 7길 23, 301호</p>
-          </div>
-          <div class="summary-list">
-            <div>
-              <span>약속</span>
-              <strong>편하게 쉬기</strong>
-            </div>
-            <div>
-              <span>주소 공개</span>
-              <strong>확정 후 안내</strong>
-            </div>
-            <div>
-              <span>마감</span>
-              <strong>밤 11시 전</strong>
-            </div>
-          </div>
-        </aside>
       </main>
 
       <div class="admin-backdrop" data-admin-close hidden></div>
@@ -426,6 +403,7 @@
 
           <div class="admin-actions">
             <button class="secondary-button" type="button" data-admin-reset>초기화</button>
+            <button class="secondary-button" type="button" data-admin-export>설정 복사</button>
             <button class="primary-button" type="button" data-admin-save>저장</button>
           </div>
           <p class="save-status" id="adminSaveStatus" aria-live="polite"></p>

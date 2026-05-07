@@ -159,7 +159,7 @@ svg {
   margin: 0 auto;
   padding: 10px clamp(14px, 4vw, 34px) 24px;
   display: grid;
-  grid-template-columns: minmax(0, 560px) minmax(280px, 360px);
+  grid-template-columns: minmax(0, 560px);
   justify-content: center;
   gap: clamp(18px, 5vw, 54px);
   align-items: start;
@@ -234,8 +234,7 @@ h2 {
 }
 
 .home-visual,
-.hero-visual,
-.summary-visual {
+.hero-visual {
   position: relative;
   min-height: 202px;
   overflow: hidden;
@@ -753,74 +752,6 @@ h2 {
   font-weight: 900;
   color: inherit;
   text-decoration: none;
-}
-
-.summary-card {
-  padding: 18px;
-}
-
-.price-table {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px 18px;
-  align-items: center;
-}
-
-.price-table strong {
-  text-align: right;
-}
-
-.compact-table {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--line);
-}
-
-.desktop-summary {
-  position: sticky;
-  top: 92px;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  overflow: hidden;
-  background: var(--panel);
-  box-shadow: var(--shadow);
-}
-
-.summary-visual {
-  min-height: 176px;
-}
-
-.summary-copy,
-.summary-list {
-  padding: 20px;
-}
-
-.summary-copy span {
-  color: var(--muted);
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.summary-copy h2 {
-  margin-top: 6px;
-}
-
-.summary-copy p {
-  margin-top: 8px;
-  color: var(--muted);
-  font-weight: 700;
-}
-
-.summary-list {
-  border-top: 1px solid var(--line);
-  display: grid;
-  gap: 18px;
-}
-
-.summary-list div {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
 }
 
 .admin-backdrop {
