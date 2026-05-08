@@ -241,7 +241,7 @@ h2 {
   background-size: cover; 
   background-position: center;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
 }
 

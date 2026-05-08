@@ -46,7 +46,7 @@ const defaultConfig = {
   blocked: [],
   booked: [],
   content: {
-    bgImage: "https://drive.usercontent.google.com/download?id=1RSHDEOVLWIjp7H-4-A-LOpBqyWPWQ0Wz&export=view&authuser=0",
+    bgImage: "starhills.png",
     datePageTitle: "언제 놀러올래?",
     datePageSubtitle: "클릭 가능한 날만 선택돼요",
     inviteEyebrow: "볼디네 집 초대",
@@ -351,10 +351,7 @@ function renderLines(listId, lines) {
 }
 
 function syncContent() {
-  // 요청하신 이미지를 고정값으로 설정 (관리자 설정이 없으면 이 주소를 사용)
-  const fixedUrl = "https://drive.usercontent.google.com/download?id=1RSHDEOVLWIjp7H-4-A-LOpBqyWPWQ0Wz&export=view&authuser=0";
-  const bgImage = (config.content.bgImage || "").trim() || fixedUrl;
-  const defaultGradient = "linear-gradient(145deg, var(--soft) 0%, var(--accent) 50%, var(--action) 100%)";
+  const bgImage = "starhills.png";
 
   document.querySelectorAll(".home-visual, .hero-visual").forEach((el) => {
     el.style.backgroundImage = `url("${bgImage}")`;
@@ -528,7 +525,6 @@ function openAdminPanel() {
   fillTimeSelect(document.getElementById("endTimeInput"), config.rules.end);
   
   // 공통 화면 문구 (HTML에 존재하는 필드만 설정)
-  setInputValue("bgImageInput", config.content.bgImage || "");
   setInputValue("datePageTitleInput", config.content.datePageTitle);
   setInputValue("guideNoticeInput", (config.content.guideNoticeLines || []).join("\n"));
   setInputValue("friendGuideTitleInput", config.content.friendGuideTitle);
@@ -585,9 +581,7 @@ async function saveAdminSettings() {
   config.rules.holidayStart = val("holidayStartInput") || config.rules.holidayStart;
   config.rules.end = val("endTimeInput") || config.rules.end;
 
-  console.log("Admin: bgImageInput value before save:", val("bgImageInput")); // 디버깅 로그
   // 공통 화면 문구
-  config.content.bgImage = val("bgImageInput") || "";
   config.content.datePageTitle = val("datePageTitleInput") || defaultConfig.content.datePageTitle;
   
   const noticeVal = val("guideNoticeInput");
