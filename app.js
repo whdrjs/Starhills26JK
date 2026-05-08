@@ -106,6 +106,13 @@ async function initApp() {
     syncUI();
     return;
   }
+  
+  // EmailJS 초기화 (Account -> API Keys -> Public Key 입력)
+  try {
+    if (typeof emailjs !== 'undefined') emailjs.init("YOUR_PUBLIC_KEY"); 
+  } catch (err) {
+    console.error("EmailJS 초기화 실패 (무시하고 진행):", err);
+  }
 
   // 2. 기본값으로 먼저 화면 표시
   syncUI();
@@ -752,6 +759,24 @@ async function finalizeBooking() {
   config.booked = toggleListValue(config.booked, state.dateKey, true);
   
   await saveConfigToSupabase();
+
+  // 이메일 알림 발송
+  try {
+    if (typeof emailjs !== 'undefined') {
+      emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        to_email: "jkeon72@gmail.com",
+        from_name: name,
+        phone: phone,
+        date: formatDate(state.dateKey),
+        time: state.time,
+        guests: state.guests,
+        message: `메뉴: ${menu}\n부탁사항: ${request}`
+      }).then(() => console.log("알림 메일 발송 성공!"), (err) => console.error("메일 발송 실패:", err));
+    }
+  } catch (err) {
+    console.error("이메일 발송 중 예외 발생 (예약은 정상 처리됨):", err);
+  }
+
   console.log("finalizeBooking: Supabase 저장 완료, 'complete' 스텝으로 이동 요청.");
   go("complete");
   console.log("finalizeBooking: 'complete' 스텝 이동 요청 완료.");
