@@ -114,6 +114,13 @@
               <div class="time-options" id="timeOptions"></div>
             </section>
 
+            <section class="map-section">
+              <h2>오시는 길</h2>
+              <div class="map-container">
+                <iframe src="https://maps.google.com/maps?q=서울특별시%20양천구%20목동중앙본로%207길%2023&t=&z=17&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
+              </div>
+            </section>
+
             <button class="primary-button bottom-action" type="button" data-go="info">다음</button>
           </section>
 
@@ -226,13 +233,20 @@
               <ul class="notice-list" id="guideNoticeList"></ul>
             </section>
 
+            <section class="map-section">
+              <h2>위치 정보</h2>
+              <div class="map-container">
+                <iframe src="https://maps.google.com/maps?q=서울특별시%20양천구%20목동중앙본로%207길%2023&t=&z=17&ie=UTF8&iwloc=&output=embed" allowfullscreen="" loading="lazy"></iframe>
+              </div>
+            </section>
+
             <button class="primary-button bottom-action" type="button" data-go="date">다른 날짜 보기</button>
           </section>
         </section>
       </main>
 
-      <div class="admin-backdrop" data-admin-close hidden></div>
-      <section class="admin-panel" aria-modal="true" role="dialog" aria-labelledby="adminTitle" hidden>
+      <div class="admin-backdrop" data-admin-close></div>
+      <section class="admin-panel" aria-modal="true" role="dialog" aria-labelledby="adminTitle">
         <div class="admin-header">
           <div>
             <span>관리자 모드</span>
@@ -383,8 +397,8 @@
         </div>
       </section>
 
-      <div class="confirm-backdrop" data-confirm-cancel hidden></div>
-      <section class="confirm-modal" aria-modal="true" role="dialog" hidden>
+      <div class="confirm-backdrop" data-confirm-cancel></div>
+      <section class="confirm-modal" aria-modal="true" role="dialog">
         <h2>이미 함께 잡힌 약속일 수 있어요</h2>
         <p>동행인 이름이 입력되어 있어요. 동행인이 따로 신청하려는 경우라면 기존 약속과 중복되지 않는지 확인해주세요.</p>
         <div class="admin-actions">
@@ -392,9 +406,9 @@
           <button class="primary-button" type="button" data-confirm-submit>그래도 확정</button>
         </div>
       </section>
-
-      <div class="auth-backdrop" data-auth-close hidden></div>
-      <section class="auth-modal" aria-modal="true" role="dialog" hidden>
+      
+      <div class="auth-backdrop" data-auth-close></div>
+      <section class="auth-modal" aria-modal="true" role="dialog">
         <h2>관리자 인증</h2>
         <p>비밀번호를 입력하세요.</p>
         <input type="password" id="adminPasswordInput" class="admin-password-input" placeholder="Password" maxlength="4" />

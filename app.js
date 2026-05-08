@@ -109,7 +109,7 @@ async function initApp() {
   
   // EmailJS 초기화 (Account -> API Keys -> Public Key 입력)
   try {
-    if (typeof emailjs !== 'undefined') emailjs.init("YOUR_PUBLIC_KEY"); 
+    if (typeof emailjs !== 'undefined') emailjs.init("EmailJS_퍼블릭_키를_넣으세요"); 
   } catch (err) {
     console.error("EmailJS 초기화 실패 (무시하고 진행):", err);
   }
@@ -425,6 +425,7 @@ function syncUI() {
   renderCompanions();
   syncContent();
   syncCalendarLink();
+
   console.log(`syncUI: 화면 업데이트 완료. 'complete' 스크린 활성화 여부: ${document.querySelector('[data-screen="complete"]')?.classList.contains('is-active')}`);
 
   // 미래 날짜 제한 안내 문구 제어
@@ -561,21 +562,21 @@ function openAdminPanel() {
   setInputValue("carNoteInput", config.content.arrivalNotes.car);
   setInputValue("walkNoteInput", config.content.arrivalNotes.walk);
 
-  adminBackdrop.hidden = false;
-  adminPanel.hidden = false;
+  adminBackdrop.classList.add('is-visible');
+  adminPanel.classList.add('is-visible');
   renderAdminCalendar();
 }
 
 function openAuthModal() {
-  authBackdrop.hidden = false;
-  authModal.hidden = false;
+  authBackdrop.classList.add('is-visible');
+  authModal.classList.add('is-visible');
   passwordInput.value = "";
   passwordInput.focus();
 }
 
 function closeAuthModal() {
-  authBackdrop.hidden = true;
-  authModal.hidden = true;
+  authBackdrop.classList.remove('is-visible');
+  authModal.classList.remove('is-visible');
   authModal.classList.remove("shake");
 }
 
@@ -592,8 +593,8 @@ function checkAdminPassword() {
 }
 
 function closeAdminPanel() {
-  adminBackdrop.hidden = true;
-  adminPanel.hidden = true;
+  adminBackdrop.classList.remove('is-visible');
+  adminPanel.classList.remove('is-visible');
 }
 
 function toggleListValue(list, value, enabled) {
@@ -763,7 +764,7 @@ async function finalizeBooking() {
   // 이메일 알림 발송
   try {
     if (typeof emailjs !== 'undefined') {
-      emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+      emailjs.send("EmailJS_서비스_ID", "EmailJS_템플릿_ID", {
         to_email: "jkeon72@gmail.com",
         from_name: name,
         phone: phone,
@@ -811,18 +812,18 @@ function validateAndConfirm() {
 
   // 모든 검증 통과 시 확정 모달 표시 (또는 바로 확정)
   if (companionInputs.length > 0) {
-    console.log("validateAndConfirm: 동행인 있음. 확인 모달 표시.");
-    confirmBackdrop.hidden = false;
-    confirmModal.hidden = false;
+    console.log("validateAndConfirm: 동행인 있음. 확인 모달 표시."); // confirmBackdrop.hidden = false; confirmModal.hidden = false;
+    confirmBackdrop.classList.add('is-visible');
+    confirmModal.classList.add('is-visible');
   } else {
     finalizeBooking();
     console.log("validateAndConfirm: 동행인 없음. 바로 finalizeBooking 호출.");
-  }
+  } 
 }
 
 function closeConfirmModal() {
-  confirmBackdrop.hidden = true;
-  confirmModal.hidden = true;
+  confirmBackdrop.classList.remove('is-visible');
+  confirmModal.classList.remove('is-visible');
 }
 
 document.addEventListener("click", (event) => {
@@ -931,13 +932,13 @@ document.addEventListener("click", (event) => {
   }
 
   if (event.target.closest("[data-confirm-cancel]")) {
-    closeConfirmModal();
+    closeConfirmModal(); // confirmBackdrop.hidden = true; confirmModal.hidden = true;
     return;
   }
 
   if (event.target.closest("[data-confirm-submit]")) {
-    closeConfirmModal();
-    finalizeBooking();
+    closeConfirmModal(); // confirmBackdrop.hidden = true; confirmModal.hidden = true;
+    finalizeBooking(); 
     return;
   }
 
@@ -1032,9 +1033,9 @@ passwordInput.addEventListener("keydown", (event) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
-    if (!adminPanel.hidden) closeAdminPanel();
-    if (!confirmModal.hidden) closeConfirmModal();
-    if (!authModal.hidden) closeAuthModal();
+    if (adminPanel.classList.contains('is-visible')) closeAdminPanel();
+    if (confirmModal.classList.contains('is-visible')) closeConfirmModal();
+    if (authModal.classList.contains('is-visible')) closeAuthModal();
   }
 });
 
