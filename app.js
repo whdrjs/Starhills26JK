@@ -41,7 +41,6 @@ const defaultConfig = {
     weekdayStart: "18:00",
     holidayStart: "10:00",
     end: "21:00",
-    limitMonths: 5,
   },
   holidays: ["2026-05-05", "2026-06-06"],
   blocked: [],
@@ -211,8 +210,9 @@ function isPastDate(key) {
 
 function isTooFarFuture(key) {
   const date = dateFromKey(key);
-  const limit = new Date();
-  limit.setMonth(limit.getMonth() + (config.rules.limitMonths || 5)); 
+  const today = dateFromKey(TODAY_KEY);
+  const limit = new Date(today);
+  limit.setDate(today.getDate() + 160); // 오늘 기준 정확히 160일 이후로 제한
   return date > limit;
 }
 
