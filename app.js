@@ -49,14 +49,14 @@ const defaultConfig = {
     bgImage: "starhills.png",
     datePageTitle: "언제 놀러올래?",
     datePageSubtitle: "클릭 가능한 날만 선택돼요",
-    inviteEyebrow: "볼디네 집 초대",
+    inviteEyebrow: "종건이네 집 초대",
     inviteTitle: "저녁 먹고 수다 떨기",
     guideEyebrow: "초대 상세",
-    guideTitle: "볼디네 집에 놀러오기",
+    guideTitle: "종건이네 집에 놀러오기",
     infoTitle: "누가 오는지 알려줘",
     infoSubtitle: "호스트에게만 보여요",
     completeTitle: "놀러오는 약속이 잡혔어요!",
-    completeSubtitle: "볼디에게 방문 정보가 전달되었습니다.",
+    completeSubtitle: "종건이에게 방문 정보가 전달되었습니다.",
     guideNoticeTitle: "알아두면 좋아요",
     guideNoticeLines: [
       "주소는 목동중앙본로 7길 23, 301호예요.",
@@ -385,7 +385,7 @@ function syncCalendarLink() {
   const toGoogleDate = (value) => value.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
   const params = new URLSearchParams({
     action: "TEMPLATE",
-    text: "볼디네 집에 놀러가기",
+    text: "종건이네 집에 놀러가기",
     dates: `${toGoogleDate(start)}/${toGoogleDate(end)}`,
     details: "친구 초대 약속입니다.",
     location: "목동중앙본로 7길 23, 301호",
