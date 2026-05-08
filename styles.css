@@ -997,6 +997,21 @@ h2 {
   text-align: center;
 }
 
+@media (min-width: 1024px) {
+  .admin-panel {
+    width: min(1000px, calc(100% - 40px));
+    max-height: 90vh;
+    padding: 32px;
+  }
+
+  .admin-grid-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+}
+
 .confirm-backdrop {
   position: fixed;
   inset: 0;

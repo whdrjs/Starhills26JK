@@ -245,171 +245,125 @@
           </button>
         </div>
 
-        <div class="admin-month">
-          <button class="icon-button small" type="button" data-admin-month="prev" aria-label="관리 이전 달">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
-          <strong id="adminMonthLabel">2026년 5월</strong>
-          <button class="icon-button small" type="button" data-admin-month="next" aria-label="관리 다음 달">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M9 6l6 6-6 6" />
-            </svg>
-          </button>
-        </div>
-
-        <div class="weekday-row" aria-hidden="true">
-          <span>일</span>
-          <span>월</span>
-          <span>화</span>
-          <span>수</span>
-          <span>목</span>
-          <span>금</span>
-          <span>토</span>
-        </div>
-        <div class="admin-calendar-grid" id="adminCalendarGrid"></div>
-
-        <form class="admin-form">
-          <section class="admin-section">
-            <h3>운영 규칙</h3>
-            <div class="admin-rule-grid">
-              <label>
-                <span>평일 시작</span>
-                <select id="weekdayStartInput"></select>
-              </label>
-              <label>
-                <span>주말/공휴일 시작</span>
-                <select id="holidayStartInput"></select>
-              </label>
-              <label>
-                <span>마감 시간</span>
-                <select id="endTimeInput"></select>
-              </label>
+        <div class="admin-grid-layout">
+          <div class="admin-left-col">
+            <div class="admin-month">
+              <button class="icon-button small" type="button" data-admin-month="prev" aria-label="관리 이전 달">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M15 18l-6-6 6-6" />
+                </svg>
+              </button>
+              <strong id="adminMonthLabel">2026년 5월</strong>
+              <button class="icon-button small" type="button" data-admin-month="next" aria-label="관리 다음 달">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6l6 6-6 6" />
+                </svg>
+              </button>
             </div>
-          </section>
 
-          <section class="admin-section">
-            <h3>선택한 날짜</h3>
-            <input id="adminDateInput" type="text" readonly />
-            <div class="admin-toggle-row">
-              <label>
-                <input id="holidayToggle" type="checkbox" />
-                공휴일로 설정
-              </label>
-              <label>
-                <input id="blockedToggle" type="checkbox" />
-                예약 불가
-              </label>
-              <label>
-                <input id="bookedToggle" type="checkbox" />
-                예약 완료
-              </label>
+            <div class="weekday-row" aria-hidden="true">
+              <span>일</span>
+              <span>월</span>
+              <span>화</span>
+              <span>수</span>
+              <span>목</span>
+              <span>금</span>
+              <span>토</span>
             </div>
-            <p id="adminDateSummary"></p>
-          </section>
+            <div class="admin-calendar-grid" id="adminCalendarGrid"></div>
 
-          <section class="admin-section">
-            <h3>다수 날짜 처리</h3>
-            <p>선택한 날짜부터 여러 날짜를 한 번에 예약 불가로 바꿀 수 있어요. 지난 날짜는 자동으로 제외됩니다.</p>
-            <div class="admin-actions">
-              <button class="secondary-button" type="button" data-admin-block-range="7">7일 막기</button>
-              <button class="secondary-button" type="button" data-admin-block-month>이번 달 남은 날짜 막기</button>
-              <button class="secondary-button" type="button" data-admin-block-weekdays>남은 평일 막기</button>
-              <button class="secondary-button" type="button" data-admin-block-relative="-3,3">앞뒤 3일 막기</button>
-              <button class="secondary-button" type="button" data-admin-block-relative="0,3">앞으로 3일 막기</button>
-              <button class="secondary-button" type="button" data-admin-block-relative="-3,0">뒤로 3일 막기</button>
-            </div>
-          </section>
-
-          <details class="admin-section admin-common-section">
-            <summary>
-              <span>
-                <strong>공통 화면 문구</strong>
-                <small>모든 날짜에 적용</small>
-              </span>
-            </summary>
-            <label>
-              <span>배경 이미지 URL</span>
-              <input id="bgImageInput" type="text" placeholder="https://images.unsplash.com/..." />
-            </label>
-            <label>
-              <span>날짜 페이지 제목</span>
-              <input id="datePageTitleInput" type="text" />
-            </label>
-            <label>
-              <span>날짜 페이지 보조문구</span>
-              <input id="datePageSubtitleInput" type="text" />
-            </label>
-            <label>
-              <span>초대 카드 라벨</span>
-              <input id="inviteEyebrowInput" type="text" />
-            </label>
-            <label>
-              <span>초대 카드 제목</span>
-              <input id="inviteTitleInput" type="text" />
-            </label>
-            <label>
-              <span>안내 페이지 라벨</span>
-              <input id="guideEyebrowInput" type="text" />
-            </label>
-            <label>
-              <span>안내 페이지 제목</span>
-              <input id="guideTitleInput" type="text" />
-            </label>
-            <label>
-              <span>집 안내 제목</span>
-              <input id="guideNoticeTitleInput" type="text" />
-            </label>
-            <label>
-              <span>집 안내 내용</span>
-              <textarea id="guideNoticeInput" rows="4" placeholder="항목당 한 줄씩 입력하세요."></textarea>
-            </label>
-            <label>
-              <span>친구 약속 안내 제목</span>
-              <input id="friendGuideTitleInput" type="text" />
-            </label>
-            <label>
-              <span>친구 약속 안내 내용</span>
-              <textarea id="friendGuideInput" rows="4" placeholder="항목당 한 줄씩 입력하세요."></textarea>
-            </label>
-            <label>
-              <span>정보 페이지 제목</span>
-              <input id="infoTitleInput" type="text" />
-            </label>
-            <label>
-              <span>정보 페이지 보조문구</span>
-              <input id="infoSubtitleInput" type="text" />
-            </label>
-            <label>
-              <span>완료 페이지 제목</span>
-              <input id="completeTitleInput" type="text" />
-            </label>
-            <label>
-              <span>완료 페이지 보조문구</span>
-              <input id="completeSubtitleInput" type="text" />
-            </label>
-            <label>
-              <span>대중교통 주의사항</span>
-              <textarea id="transitNoteInput" rows="2"></textarea>
-            </label>
-            <label>
-              <span>자가 주의사항</span>
-              <textarea id="carNoteInput" rows="2"></textarea>
-            </label>
-            <label>
-              <span>도보 주의사항</span>
-              <textarea id="walkNoteInput" rows="2"></textarea>
-            </label>
-          </details>
-
-          <div class="admin-actions">
-            <button class="secondary-button" type="button" data-admin-reset>초기화</button>
-            <button class="secondary-button" type="button" data-admin-export>설정 복사</button>
-            <button class="primary-button" type="button" data-admin-save>저장</button>
+            <section class="admin-section" id="adminBookedListSection">
+              <h3>확정된 예약 목록</h3>
+              <ul class="admin-booked-list" id="adminBookedList"></ul>
+            </section>
           </div>
-          <p class="save-status" id="adminSaveStatus" aria-live="polite"></p>
-        </form>
+
+          <form class="admin-form">
+            <section class="admin-section">
+              <h3>운영 규칙</h3>
+              <div class="admin-rule-grid">
+                <label>
+                  <span>평일 시작</span>
+                  <select id="weekdayStartInput"></select>
+                </label>
+                <label>
+                  <span>주말/공휴일 시작</span>
+                  <select id="holidayStartInput"></select>
+                </label>
+                <label>
+                  <span>마감 시간</span>
+                  <select id="endTimeInput"></select>
+                </label>
+              </div>
+            </section>
+
+            <section class="admin-section">
+              <h3>선택한 날짜</h3>
+              <input id="adminDateInput" type="text" readonly />
+              <div class="admin-toggle-row">
+                <label>
+                  <input id="holidayToggle" type="checkbox" />
+                  공휴일로 설정
+                </label>
+                <label>
+                  <input id="blockedToggle" type="checkbox" />
+                  예약 불가
+                </label>
+                <label>
+                  <input id="bookedToggle" type="checkbox" />
+                  예약 완료
+                </label>
+              </div>
+              <p id="adminDateSummary"></p>
+            </section>
+
+            <section class="admin-section">
+              <h3>다수 날짜 처리</h3>
+              <p>선택한 날짜부터 여러 날짜를 한 번에 예약 불가로 바꿀 수 있어요.</p>
+              <div class="admin-actions">
+                <button class="secondary-button" type="button" data-admin-block-range="7">7일 막기</button>
+                <button class="secondary-button" type="button" data-admin-block-month>이번 달 남은 날짜 막기</button>
+                <button class="secondary-button" type="button" data-admin-block-weekdays>남은 평일 막기</button>
+              </div>
+            </section>
+
+            <details class="admin-section admin-common-section">
+              <summary>
+                <span>
+                  <strong>공통 화면 문구</strong>
+                  <small>모든 날짜에 적용</small>
+                </span>
+              </summary>
+              <label>
+                <span>배경 이미지 URL</span>
+                <input id="bgImageInput" type="text" placeholder="https://images.unsplash.com/..." />
+              </label>
+              <label>
+                <span>날짜 페이지 제목</span>
+                <input id="datePageTitleInput" type="text" />
+              </label>
+              <label>
+                <span>집 안내 내용</span>
+                <textarea id="guideNoticeInput" rows="4" placeholder="항목당 한 줄씩 입력하세요."></textarea>
+              </label>
+              <label>
+                <span>친구 약속 안내 제목</span>
+                <input id="friendGuideTitleInput" type="text" />
+              </label>
+              <label>
+                <span>친구 약속 안내 내용</span>
+                <textarea id="friendGuideInput" rows="4" placeholder="항목당 한 줄씩 입력하세요."></textarea>
+              </label>
+            </details>
+
+            <div class="admin-actions">
+              <button class="secondary-button" type="button" data-admin-reset>초기화</button>
+              <button class="secondary-button" type="button" data-admin-export>설정 복사</button>
+              <button class="primary-button" type="button" data-admin-save>저장</button>
+            </div>
+            <p class="save-status" id="adminSaveStatus" aria-live="polite"></p>
+          </form>
+        </div>
       </section>
 
       <div class="confirm-backdrop" data-confirm-cancel hidden></div>

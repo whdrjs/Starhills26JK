@@ -426,6 +426,34 @@ function renderAdminCalendar() {
   setText("adminMonthLabel", `${adminState.month.getFullYear()}년 ${adminState.month.getMonth() + 1}월`);
   renderMonthGrid(adminCalendarGrid, adminState.month, adminState.dateKey, "admin");
   syncAdminForm();
+  renderBookedList();
+}
+
+function renderBookedList() {
+  const list = document.getElementById("adminBookedList");
+  if (!list) return;
+  list.innerHTML = "";
+
+  // 날짜순으로 정렬하여 표시
+  const sortedBooked = [...config.booked].sort();
+  
+  sortedBooked.forEach(key => {
+    const li = document.createElement("li");
+    li.textContent = formatDate(key);
+    li.onclick = () => {
+      const date = dateFromKey(key);
+      adminState.month = new Date(date.getFullYear(), date.getMonth(), 1);
+      adminState.dateKey = key;
+      renderAdminCalendar();
+    };
+    list.appendChild(li);
+  });
+
+  // 목록 섹션 표시 여부
+  const section = document.getElementById("adminBookedListSection");
+  if (section) {
+    section.hidden = sortedBooked.length === 0;
+  }
 }
 
 function syncAdminForm() {
