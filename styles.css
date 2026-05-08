@@ -521,11 +521,17 @@ h2 {
 
 .schedule-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 12px;
   text-align: center;
   margin-bottom: 24px;
+}
+
+.schedule-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .schedule-grid div:not(.night-pill) {
@@ -760,30 +766,38 @@ h2 {
   margin-bottom: 24px;
 }
 
-.summary-card .schedule-grid {
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px dashed var(--line);
-}
-
 .compact-table {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 14px 20px;
+  gap: 16px 20px;
   align-items: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--line);
 }
 
 .compact-table span {
   color: var(--muted);
-  font-size: 13px;
   font-weight: 800;
+  font-size: 13px;
 }
 
 .compact-table strong {
   text-align: right;
   font-size: 15px;
-  font-weight: 800;
   color: var(--ink);
+}
+
+.admin-detail-card {
+  background: var(--soft-2);
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.admin-detail-card p {
+  margin-bottom: 4px;
 }
 
 .admin-backdrop {
@@ -1203,11 +1217,11 @@ h2 {
   }
 
   .schedule-grid {
-    grid-template-columns: minmax(0, 1fr) 48px minmax(0, 1fr);
-    gap: 8px;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
   }
 
   .schedule-grid strong {
-    font-size: 18px;
+    font-size: 17px;
   }
 }

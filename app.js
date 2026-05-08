@@ -148,6 +148,7 @@ async function loadConfigFromSupabase() {
             ...defaultConfig.content.arrivalNotes,
             ...((saved.content || {}).arrivalNotes || {}),
           },
+          bookingDetails: saved.bookingDetails || {},
         },
       };
     }
@@ -393,6 +394,7 @@ function syncCalendarLink() {
 }
 
 function syncUI() {
+  console.log(`syncUI: 현재 스텝: ${state.step}`);
   if (state.step !== "complete") ensureSelectedDateIsAvailable();
   const formattedDate = formatDate(state.dateKey);
   const schedule = `${formattedDate} ${state.time}`;
@@ -400,6 +402,7 @@ function syncUI() {
   app.dataset.step = state.step;
   screens.forEach((screen) => screen.classList.toggle("is-active", screen.dataset.screen === state.step));
   stepPills.forEach((pill) => pill.classList.toggle("is-active", pill.dataset.go === state.step));
+  console.log(`syncUI: app.dataset.step 설정됨: ${app.dataset.step}`);
 
   setText("screenTitle", titles[state.step]);
   setText("selectedDateLine", schedule);
@@ -415,6 +418,7 @@ function syncUI() {
   renderCompanions();
   syncContent();
   syncCalendarLink();
+  console.log(`syncUI: 화면 업데이트 완료. 'complete' 스크린 활성화 여부: ${document.querySelector('[data-screen="complete"]')?.classList.contains('is-active')}`);
 
   // 미래 날짜 제한 안내 문구 제어
   const monthEnd = new Date(state.month.getFullYear(), state.month.getMonth() + 1, 0);
@@ -477,8 +481,9 @@ function renderBookedList() {
   const sortedBooked = [...config.booked].sort();
   
   sortedBooked.forEach(key => {
+    const detail = config.bookingDetails?.[key];
     const li = document.createElement("li");
-    li.textContent = formatDate(key);
+    li.textContent = detail ? `${formatDate(key)} (${detail.name})` : formatDate(key);
     li.onclick = () => {
       const date = dateFromKey(key);
       adminState.month = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -501,6 +506,22 @@ function syncAdminForm() {
   setChecked("holidayToggle", config.holidays.includes(adminState.dateKey));
   setChecked("blockedToggle", config.blocked.includes(adminState.dateKey));
   setChecked("bookedToggle", config.booked.includes(adminState.dateKey));
+
+  // 예약 상세 정보 표시
+  const detail = config.bookingDetails?.[adminState.dateKey];
+  const detailContainer = document.getElementById("adminBookingDetailDisplay");
+  if (detail && config.booked.includes(adminState.dateKey)) {
+    detailContainer.innerHTML = `
+      <div class="admin-detail-card">
+        <p><strong>신청자:</strong> ${detail.name} (${detail.phone})</p>
+        <p><strong>인원:</strong> ${detail.guests} (동행: ${detail.companions.join(', ') || '없음'})</p>
+        <p><strong>메뉴/부탁:</strong> ${detail.menu || '없음'} / ${detail.request || '없음'}</p>
+      </div>
+    `;
+  } else {
+    detailContainer.innerHTML = "";
+  }
+
   setText(
     "adminDateSummary",
     selectedTimes.length ? `친구에게 ${selectedTimes[0]}부터 ${selectedTimes[selectedTimes.length - 1]}까지 보여요.` : "친구 화면에서 선택할 수 없는 날짜예요.",
@@ -706,14 +727,34 @@ async function blockRelativeRange(rangeStr) {
 
 function go(step) {
   state.step = step;
+  console.log(`go: 스텝을 '${step}'으로 변경. syncUI 호출.`);
   syncUI();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 async function finalizeBooking() {
+  console.log("finalizeBooking: 시작");
+  // 폼 데이터 수집
+  const form = document.querySelector('.screen-info .booking-form');
+  const name = form.querySelector('input[type="text"]').value.trim();
+  const phone = form.querySelector('input[type="tel"]').value.trim();
+  const textareas = form.querySelectorAll('textarea');
+  const menu = textareas[0] ? textareas[0].value.trim() : "";
+  const request = textareas[1] ? textareas[1].value.trim() : "";
+  const companions = [...document.querySelectorAll(".companion-name")].map(i => i.value.trim());
+
+  config.bookingDetails = config.bookingDetails || {};
+  config.bookingDetails[state.dateKey] = {
+    name, phone, guests: state.guests, companions, menu, request, 
+    timestamp: new Date().toISOString()
+  };
+
   config.booked = toggleListValue(config.booked, state.dateKey, true);
+  
   await saveConfigToSupabase();
+  console.log("finalizeBooking: Supabase 저장 완료, 'complete' 스텝으로 이동 요청.");
   go("complete");
+  console.log("finalizeBooking: 'complete' 스텝 이동 요청 완료.");
 }
 
 /**
@@ -721,6 +762,7 @@ async function finalizeBooking() {
  */
 function validateAndConfirm() {
   const nameInput = document.querySelector('.screen-info .booking-form input[type="text"]');
+  console.log("validateAndConfirm: 시작");
   const telInput = document.querySelector('.screen-info .booking-form input[type="tel"]');
   const companionInputs = [...document.querySelectorAll(".companion-name")];
 
@@ -744,10 +786,12 @@ function validateAndConfirm() {
 
   // 모든 검증 통과 시 확정 모달 표시 (또는 바로 확정)
   if (companionInputs.length > 0) {
+    console.log("validateAndConfirm: 동행인 있음. 확인 모달 표시.");
     confirmBackdrop.hidden = false;
     confirmModal.hidden = false;
   } else {
     finalizeBooking();
+    console.log("validateAndConfirm: 동행인 없음. 바로 finalizeBooking 호출.");
   }
 }
 
