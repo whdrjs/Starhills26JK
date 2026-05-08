@@ -8,6 +8,14 @@ const adminBackdrop = document.querySelector(".admin-backdrop");
 const adminCalendarGrid = document.getElementById("adminCalendarGrid");
 const confirmModal = document.querySelector(".confirm-modal");
 const confirmBackdrop = document.querySelector(".confirm-backdrop");
+const authModal = document.querySelector(".auth-modal");
+const authBackdrop = document.querySelector(".auth-backdrop");
+const passwordInput = document.getElementById("adminPasswordInput");
+
+const SUPABASE_URL = 'https://btzexlsyesskkfeulwuh.supabase.co'; 
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0emV4bHN5ZXNza2tmZXVsd3VoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxNzY1OTEsImV4cCI6MjA5Mzc1MjU5MX0.DtL0JDt3wOKh9KxeXDYaMKCa4OPiO3yX_dny_a_1sLQ';
+
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); // 'new' 삭제 (CDN 방식에서는 사용 안 함)
 
 let renderedCompanionCount = -1;
 let adminTapCount = 0;
@@ -69,8 +77,7 @@ const defaultConfig = {
   },
 };
 
-let config = loadConfig();
-
+// 초기 상태 설정 (데이터를 불러오기 전까지 기본값 유지)
 const [tYear, tMonth] = TODAY_KEY.split("-").map(Number);
 
 const state = {
@@ -83,22 +90,58 @@ const state = {
   guests: "2명",
 };
 
+let config = clone(defaultConfig);
+
 const adminState = {
   month: new Date(state.month),
   dateKey: state.dateKey,
 };
 
+// 앱 시작 시 DB에서 설정을 불러옵니다.
+async function initApp() {
+  // 먼저 기본값으로 화면을 한 번 그립니다 (연결이 늦어져도 화면이 뜨게 함)
+  // 1. 라이브러리 로드 확인
+  if (typeof supabase === 'undefined') {
+    console.error("Supabase 라이브러리가 로드되지 않았습니다. 인터넷 연결을 확인하세요.");
+    syncUI();
+    return;
+  }
+
+  // 2. 기본값으로 먼저 화면 표시
+  syncUI();
+  
+  try {
+    await loadConfigFromSupabase();
+    syncUI(); // 데이터 로드 완료 후 최신 데이터로 다시 그립니다.
+    syncUI(); // 성공 시 데이터 덮어씌워서 다시 그리기
+  } catch (err) {
+    console.warn("초기 데이터 로드 중 오류가 발생했으나 기본값으로 계속합니다.");
+    console.error("데이터 로드 실패, 기본 설정으로 구동합니다:", err);
+  }
+}
+
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
-function loadConfig() {
+async function loadConfigFromSupabase() {
+  if (!supabaseClient) return;
+
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-    if (saved && typeof saved === "object") {
-      return {
+    const { data, error } = await supabaseClient
+      .from('config_store')
+      .select('data')
+      .eq('id', 1)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    // 데이터가 있고, data 내부 속성이 존재하는지 확인
+    if (data && data.data && typeof data.data === 'object' && Object.keys(data.data).length > 0) {
+      const saved = data.data;
+      config = {
         ...clone(defaultConfig),
-        ...saved,
+        ...saved, // 저장된 전체 객체를 덮어씌움
         rules: { ...defaultConfig.rules, ...(saved.rules || {}) },
         content: {
           ...clone(defaultConfig.content),
@@ -110,14 +153,21 @@ function loadConfig() {
         },
       };
     }
-  } catch {
-    localStorage.removeItem(STORAGE_KEY);
+  } catch (err) {
+    console.error("데이터베이스 로드 실패:", err.message);
   }
-  return clone(defaultConfig);
 }
 
-function saveConfig() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
+async function saveConfigToSupabase() {
+  try {
+    const { error } = await supabaseClient
+      .from('config_store')
+      .upsert({ id: 1, data: config, updated_at: new Date() });
+    if (error) throw error;
+  } catch (err) {
+    console.error("Config 저장 실패:", err.message);
+    alert("저장에 실패했습니다. 네트워크 상태를 확인해주세요.");
+  }
 }
 
 function setText(id, value) {
@@ -428,6 +478,31 @@ function openAdminPanel() {
   renderAdminCalendar();
 }
 
+function openAuthModal() {
+  authBackdrop.hidden = false;
+  authModal.hidden = false;
+  passwordInput.value = "";
+  passwordInput.focus();
+}
+
+function closeAuthModal() {
+  authBackdrop.hidden = true;
+  authModal.hidden = true;
+  authModal.classList.remove("shake");
+}
+
+function checkAdminPassword() {
+  if (passwordInput.value === "72") {
+    closeAuthModal();
+    openAdminPanel();
+  } else {
+    authModal.classList.add("shake");
+    setTimeout(() => authModal.classList.remove("shake"), 400);
+    passwordInput.value = "";
+    passwordInput.focus();
+  }
+}
+
 function closeAdminPanel() {
   adminBackdrop.hidden = true;
   adminPanel.hidden = true;
@@ -440,7 +515,7 @@ function toggleListValue(list, value, enabled) {
   return [...next].sort();
 }
 
-function saveAdminSettings() {
+async function saveAdminSettings() {
   config.rules.weekdayStart = document.getElementById("weekdayStartInput").value;
   config.rules.holidayStart = document.getElementById("holidayStartInput").value;
   config.rules.end = document.getElementById("endTimeInput").value;
@@ -461,7 +536,7 @@ function saveAdminSettings() {
   config.content.arrivalNotes.transit = document.getElementById("transitNoteInput").value.trim();
   config.content.arrivalNotes.car = document.getElementById("carNoteInput").value.trim();
   config.content.arrivalNotes.walk = document.getElementById("walkNoteInput").value.trim();
-  saveConfig();
+  await saveConfigToSupabase();
   showSaveStatus("저장됐어요.");
   syncUI();
   renderAdminCalendar();
@@ -473,14 +548,13 @@ function exportConfig() {
     alert("현재 설정 데이터가 복사되었습니다!\napp.js의 defaultConfig 변수에 이 내용을 덮어씌우면 영구적으로 반영됩니다.");
   }).catch(err => {
     console.error('복사 실패:', err);
-    alert("복사에 실패했습니다. 콘솔창을 확인해주세요.");
     console.log(configJson);
   });
 }
 
 function resetAdminSettings() {
   config = clone(defaultConfig);
-  saveConfig();
+  saveConfigToSupabase();
   showSaveStatus("초기화했어요.");
   syncUI();
   openAdminPanel();
@@ -492,7 +566,7 @@ function showSaveStatus(message) {
   showSaveStatus.timer = window.setTimeout(() => setText("adminSaveStatus", ""), 1800);
 }
 
-function blockDateRange(days) {
+async function blockDateRange(days) {
   const cursor = dateFromKey(adminState.dateKey);
   for (let i = 0; i < days; i += 1) {
     const key = keyFromDate(cursor);
@@ -502,13 +576,13 @@ function blockDateRange(days) {
     }
     cursor.setDate(cursor.getDate() + 1);
   }
-  saveConfig();
+  await saveConfigToSupabase();
   showSaveStatus(`${days}일을 예약 불가로 저장했어요.`);
   syncUI();
   renderAdminCalendar();
 }
 
-function blockRemainingMonth() {
+async function blockRemainingMonth() {
   const cursor = dateFromKey(adminState.dateKey);
   const month = cursor.getMonth();
   let count = 0;
@@ -521,13 +595,13 @@ function blockRemainingMonth() {
     }
     cursor.setDate(cursor.getDate() + 1);
   }
-  saveConfig();
+  await saveConfigToSupabase();
   showSaveStatus(`${count}개 날짜를 예약 불가로 저장했어요.`);
   syncUI();
   renderAdminCalendar();
 }
 
-function blockWeekdaysInMonth() {
+async function blockWeekdaysInMonth() {
   const cursor = dateFromKey(adminState.dateKey);
   const month = cursor.getMonth();
   let count = 0;
@@ -543,13 +617,13 @@ function blockWeekdaysInMonth() {
     }
     cursor.setDate(cursor.getDate() + 1);
   }
-  saveConfig();
+  await saveConfigToSupabase();
   showSaveStatus(`남은 평일 ${count}개를 예약 불가로 저장했어요.`);
   syncUI();
   renderAdminCalendar();
 }
 
-function blockRelativeRange(rangeStr) {
+async function blockRelativeRange(rangeStr) {
   const [start, end] = rangeStr.split(",").map(Number);
   const base = dateFromKey(adminState.dateKey);
   for (let i = start; i <= end; i += 1) {
@@ -561,7 +635,7 @@ function blockRelativeRange(rangeStr) {
       config.booked = toggleListValue(config.booked, key, false);
     }
   }
-  saveConfig();
+  await saveConfigToSupabase();
   showSaveStatus(`선택일 기준 범위를 예약 불가로 저장했어요.`);
   syncUI();
   renderAdminCalendar();
@@ -573,9 +647,9 @@ function go(step) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function finalizeBooking() {
+async function finalizeBooking() {
   config.booked = toggleListValue(config.booked, state.dateKey, true);
-  saveConfig();
+  await saveConfigToSupabase();
   go("complete");
 }
 
@@ -611,13 +685,23 @@ document.addEventListener("click", (event) => {
     }, 1200);
     if (adminTapCount >= 5) {
       adminTapCount = 0;
-      openAdminPanel();
+      openAuthModal();
     }
     return;
   }
 
   if (event.target.closest("[data-admin-close]")) {
     closeAdminPanel();
+    return;
+  }
+
+  if (event.target.closest("[data-auth-close]")) {
+    closeAuthModal();
+    return;
+  }
+
+  if (event.target.id === "authSubmitBtn") {
+    checkAdminPassword();
     return;
   }
 
@@ -741,7 +825,7 @@ document.addEventListener("change", (event) => {
 
   if (event.target.id === "holidayToggle") {
     config.holidays = toggleListValue(config.holidays, adminState.dateKey, event.target.checked);
-    saveConfig();
+    saveConfigToSupabase();
     showSaveStatus("공휴일 설정을 저장했어요.");
     syncUI();
     renderAdminCalendar();
@@ -750,7 +834,7 @@ document.addEventListener("change", (event) => {
   if (event.target.id === "blockedToggle") {
     config.blocked = toggleListValue(config.blocked, adminState.dateKey, event.target.checked);
     if (event.target.checked) config.booked = toggleListValue(config.booked, adminState.dateKey, false);
-    saveConfig();
+    saveConfigToSupabase();
     showSaveStatus("예약 불가 설정을 저장했어요.");
     syncUI();
     renderAdminCalendar();
@@ -759,10 +843,16 @@ document.addEventListener("change", (event) => {
   if (event.target.id === "bookedToggle") {
     config.booked = toggleListValue(config.booked, adminState.dateKey, event.target.checked);
     if (event.target.checked) config.blocked = toggleListValue(config.blocked, adminState.dateKey, false);
-    saveConfig();
+    saveConfigToSupabase();
     showSaveStatus("예약 완료 설정을 저장했어요.");
     syncUI();
     renderAdminCalendar();
+  }
+});
+
+passwordInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    checkAdminPassword();
   }
 });
 
@@ -770,7 +860,8 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
     if (!adminPanel.hidden) closeAdminPanel();
     if (!confirmModal.hidden) closeConfirmModal();
+    if (!authModal.hidden) closeAuthModal();
   }
 });
 
-syncUI();
+initApp();
