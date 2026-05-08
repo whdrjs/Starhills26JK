@@ -41,6 +41,7 @@ const defaultConfig = {
     weekdayStart: "18:00",
     holidayStart: "10:00",
     end: "21:00",
+    limitMonths: 5,
   },
   holidays: ["2026-05-05", "2026-06-06"],
   blocked: [],
@@ -208,10 +209,36 @@ function isPastDate(key) {
   return key < TODAY_KEY;
 }
 
+function isTooFarFuture(key) {
+  const date = dateFromKey(key);
+  const limit = new Date();
+  limit.setMonth(limit.getMonth() + (config.rules.limitMonths || 5)); 
+  return date > limit;
+}
+
 function availableTimesFor(key) {
-  if (isPastDate(key)) return [];
+  if (isPastDate(key) || isTooFarFuture(key)) return [];
   if (config.blocked.includes(key) || config.booked.includes(key)) return [];
-  const start = isHolidayOrWeekend(key) ? config.rules.holidayStart : config.rules.weekdayStart;
+
+  const date = dateFromKey(key);
+  const day = date.getDay(); // 0:일, 1:월, ..., 5:금, 6:토
+  const isHoliday = config.holidays.includes(key);
+
+  // 다음날이 공휴일인지 확인 (공휴일 전날 활성화 로직)
+  const nextDay = new Date(date);
+  nextDay.setDate(date.getDate() + 1);
+  const nextDayKey = keyFromDate(nextDay);
+  const isDayBeforeHoliday = config.holidays.includes(nextDayKey);
+
+  // 월~목(1~4)은 닫고, 금/토/일(5,6,0) 및 공휴일(전날 포함)만 활성화
+  const isNaturallyOpen = (day === 5 || day === 6 || day === 0);
+  
+  if (!isNaturallyOpen && !isHoliday && !isDayBeforeHoliday) return [];
+
+  // 시간 규칙: 토/일/공휴일 본일은 holidayStart, 금요일/공휴일 전날은 weekdayStart 적용
+  const useHolidayRules = (day === 0 || day === 6 || isHoliday);
+  const start = useHolidayRules ? config.rules.holidayStart : config.rules.weekdayStart;
+
   return timeRange(start, config.rules.end);
 }
 
@@ -382,6 +409,12 @@ function syncUI() {
   renderCompanions();
   syncContent();
   syncCalendarLink();
+
+  // 미래 날짜 제한 안내 문구 제어
+  const monthEnd = new Date(state.month.getFullYear(), state.month.getMonth() + 1, 0);
+  const showNotice = isTooFarFuture(keyFromDate(monthEnd));
+  const noticeEl = document.getElementById("futureLimitNotice");
+  if (noticeEl) noticeEl.style.display = showNotice ? "block" : "none";
 }
 
 function renderCompanions() {
