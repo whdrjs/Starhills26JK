@@ -517,6 +517,7 @@ function openAdminPanel() {
   fillTimeSelect(document.getElementById("weekdayStartInput"), config.rules.weekdayStart);
   fillTimeSelect(document.getElementById("holidayStartInput"), config.rules.holidayStart);
   fillTimeSelect(document.getElementById("endTimeInput"), config.rules.end);
+  setInputValue("bgImageInput", config.content.bgImage || "");
   setInputValue("guideNoticeTitleInput", config.content.guideNoticeTitle);
   setInputValue("datePageTitleInput", config.content.datePageTitle);
   setInputValue("datePageSubtitleInput", config.content.datePageSubtitle);
@@ -580,6 +581,7 @@ async function saveAdminSettings() {
   config.rules.weekdayStart = document.getElementById("weekdayStartInput").value;
   config.rules.holidayStart = document.getElementById("holidayStartInput").value;
   config.rules.end = document.getElementById("endTimeInput").value;
+  config.content.bgImage = document.getElementById("bgImageInput").value.trim();
   config.content.datePageTitle = document.getElementById("datePageTitleInput").value.trim() || defaultConfig.content.datePageTitle;
   config.content.datePageSubtitle = document.getElementById("datePageSubtitleInput").value.trim() || defaultConfig.content.datePageSubtitle;
   config.content.inviteEyebrow = document.getElementById("inviteEyebrowInput").value.trim() || defaultConfig.content.inviteEyebrow;
