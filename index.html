@@ -124,11 +124,11 @@
             <form class="booking-form">
               <label>
                 <span>이름</span>
-                <input type="text" placeholder="김친구" autocomplete="name" />
+                <input type="text" placeholder="성함 또는 닉네임을 입력해주세요" autocomplete="name" />
               </label>
               <label>
                 <span>연락처</span>
-                <input type="tel" placeholder="010-1234-5678" autocomplete="tel" />
+                <input type="tel" placeholder="연락 가능한 번호를 입력해주세요" autocomplete="tel" />
               </label>
               <label>
                 <span>오는 인원</span>
@@ -142,11 +142,11 @@
               <div class="companion-fields" id="companionFields"></div>
               <label>
                 <span>추천 메뉴</span>
-                <textarea rows="3" placeholder="따뜻한 파스타나 간단한 안주가 좋아요."></textarea>
+                <textarea rows="3" placeholder="함께 먹고 싶은 메뉴나 못 드시는 음식이 있다면 적어주세요"></textarea>
               </label>
               <label>
                 <span>부탁사항</span>
-                <textarea rows="4" placeholder="근처 역에서 만나서 같이 가면 좋아요."></textarea>
+                <textarea rows="4" placeholder="호스트에게 전달할 추가 메시지나 궁금한 점을 적어주세요"></textarea>
               </label>
             </form>
 
@@ -176,11 +176,6 @@
               <input type="checkbox" checked />
               <span>방문 하루 전 알림을 받을게요.</span>
             </label>
-
-            <details class="accordion" open>
-              <summary id="friendGuideTitle">친구 약속 안내</summary>
-              <ul id="friendGuideList"></ul>
-            </details>
 
             <button class="primary-button bottom-action" type="button" data-complete>초대 확정하기</button>
           </section>
@@ -354,6 +349,22 @@
                 <textarea id="friendGuideInput" rows="4" placeholder="항목당 한 줄씩 입력하세요."></textarea>
               </label>
             </details>
+
+            <section class="admin-section">
+              <h3>교통수단별 안내</h3>
+              <label>
+                <span>대중교통 안내</span>
+                <textarea id="transitNoteInput" rows="2"></textarea>
+              </label>
+              <label>
+                <span>자가 안내</span>
+                <textarea id="carNoteInput" rows="2"></textarea>
+              </label>
+              <label>
+                <span>도보 안내</span>
+                <textarea id="walkNoteInput" rows="2"></textarea>
+              </label>
+            </section>
 
             <div class="admin-actions">
               <button class="secondary-button" type="button" data-admin-reset>초기화</button>

@@ -529,6 +529,9 @@ function openAdminPanel() {
   setInputValue("guideNoticeInput", (config.content.guideNoticeLines || []).join("\n"));
   setInputValue("friendGuideTitleInput", config.content.friendGuideTitle);
   setInputValue("friendGuideInput", (config.content.friendGuideLines || []).join("\n"));
+  setInputValue("transitNoteInput", config.content.arrivalNotes.transit);
+  setInputValue("carNoteInput", config.content.arrivalNotes.car);
+  setInputValue("walkNoteInput", config.content.arrivalNotes.walk);
 
   adminBackdrop.hidden = false;
   adminPanel.hidden = false;
@@ -591,6 +594,10 @@ async function saveAdminSettings() {
   
   const friendVal = val("friendGuideInput");
   if (friendVal !== null) config.content.friendGuideLines = friendVal.split("\n").map(l => l.trim()).filter(Boolean);
+
+  config.content.arrivalNotes.transit = val("transitNoteInput") || defaultConfig.content.arrivalNotes.transit;
+  config.content.arrivalNotes.car = val("carNoteInput") || defaultConfig.content.arrivalNotes.car;
+  config.content.arrivalNotes.walk = val("walkNoteInput") || defaultConfig.content.arrivalNotes.walk;
 
   await saveConfigToSupabase();
   showSaveStatus("저장됐어요.");
@@ -709,14 +716,39 @@ async function finalizeBooking() {
   go("complete");
 }
 
-function maybeConfirmCompanionDuplicate() {
-  const hasCompanionName = [...document.querySelectorAll(".companion-name")].some((input) => input.value.trim());
-  if (!hasCompanionName) {
-    finalizeBooking();
+/**
+ * 2단계 방문 정보 입력 검증 로직
+ */
+function validateAndConfirm() {
+  const nameInput = document.querySelector('.screen-info .booking-form input[type="text"]');
+  const telInput = document.querySelector('.screen-info .booking-form input[type="tel"]');
+  const companionInputs = [...document.querySelectorAll(".companion-name")];
+
+  if (!nameInput.value.trim()) {
+    alert("방문하시는 분의 이름을 입력해주세요.");
+    nameInput.focus();
     return;
   }
-  confirmBackdrop.hidden = false;
-  confirmModal.hidden = false;
+  if (!telInput.value.trim()) {
+    alert("연락처를 입력해주세요.");
+    telInput.focus();
+    return;
+  }
+  for (let i = 0; i < companionInputs.length; i++) {
+    if (!companionInputs[i].value.trim()) {
+      alert(`동행인 ${i + 1}의 이름을 입력해주세요.`);
+      companionInputs[i].focus();
+      return;
+    }
+  }
+
+  // 모든 검증 통과 시 확정 모달 표시 (또는 바로 확정)
+  if (companionInputs.length > 0) {
+    confirmBackdrop.hidden = false;
+    confirmModal.hidden = false;
+  } else {
+    finalizeBooking();
+  }
 }
 
 function closeConfirmModal() {
@@ -886,7 +918,7 @@ document.addEventListener("click", (event) => {
   }
 
   if (event.target.closest("[data-complete]")) {
-    maybeConfirmCompanionDuplicate();
+    validateAndConfirm();
   }
 });
 
