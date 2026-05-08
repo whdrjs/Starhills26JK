@@ -46,7 +46,7 @@ const defaultConfig = {
   blocked: [],
   booked: [],
   content: {
-    bgImage: "",
+    bgImage: "https://drive.usercontent.google.com/download?id=1RSHDEOVLWIjp7H-4-A-LOpBqyWPWQ0Wz&export=view&authuser=0",
     datePageTitle: "언제 놀러올래?",
     datePageSubtitle: "클릭 가능한 날만 선택돼요",
     inviteEyebrow: "볼디네 집 초대",
@@ -112,11 +112,9 @@ async function initApp() {
   
   try {
     await loadConfigFromSupabase();
-    syncUI(); // 데이터 로드 완료 후 최신 데이터로 다시 그립니다.
-    syncUI(); // 성공 시 데이터 덮어씌워서 다시 그리기
+    syncUI();
   } catch (err) {
-    console.warn("초기 데이터 로드 중 오류가 발생했으나 기본값으로 계속합니다.");
-    console.error("데이터 로드 실패, 기본 설정으로 구동합니다:", err);
+    console.error("초기 데이터 로드 중 오류 발생. 기본 설정으로 구동합니다:", err);
   }
 }
 
@@ -153,6 +151,7 @@ async function loadConfigFromSupabase() {
         },
       };
     }
+    console.log("Config loaded from Supabase. bgImage:", config.content.bgImage); // 디버깅 로그 추가
   } catch (err) {
     console.error("데이터베이스 로드 실패:", err.message);
   }
@@ -164,6 +163,7 @@ async function saveConfigToSupabase() {
       .from('config_store')
       .upsert({ id: 1, data: config, updated_at: new Date() });
     if (error) throw error;
+    console.log("Config saved to Supabase. bgImage:", config.content.bgImage); // 디버깅 로그 추가
   } catch (err) {
     console.error("Config 저장 실패:", err.message);
     alert("저장에 실패했습니다. 네트워크 상태를 확인해주세요.");
@@ -351,6 +351,15 @@ function renderLines(listId, lines) {
 }
 
 function syncContent() {
+  // 요청하신 이미지를 고정값으로 설정 (관리자 설정이 없으면 이 주소를 사용)
+  const fixedUrl = "https://drive.usercontent.google.com/download?id=1RSHDEOVLWIjp7H-4-A-LOpBqyWPWQ0Wz&export=view&authuser=0";
+  const bgImage = (config.content.bgImage || "").trim() || fixedUrl;
+  const defaultGradient = "linear-gradient(145deg, var(--soft) 0%, var(--accent) 50%, var(--action) 100%)";
+
+  document.querySelectorAll(".home-visual, .hero-visual").forEach((el) => {
+    el.style.backgroundImage = `url("${bgImage}")`;
+  });
+
   setText("datePageTitle", config.content.datePageTitle);
   setText("datePageSubtitle", config.content.datePageSubtitle);
   setText("inviteEyebrow", config.content.inviteEyebrow);
@@ -517,24 +526,14 @@ function openAdminPanel() {
   fillTimeSelect(document.getElementById("weekdayStartInput"), config.rules.weekdayStart);
   fillTimeSelect(document.getElementById("holidayStartInput"), config.rules.holidayStart);
   fillTimeSelect(document.getElementById("endTimeInput"), config.rules.end);
+  
+  // 공통 화면 문구 (HTML에 존재하는 필드만 설정)
   setInputValue("bgImageInput", config.content.bgImage || "");
-  setInputValue("guideNoticeTitleInput", config.content.guideNoticeTitle);
   setInputValue("datePageTitleInput", config.content.datePageTitle);
-  setInputValue("datePageSubtitleInput", config.content.datePageSubtitle);
-  setInputValue("inviteEyebrowInput", config.content.inviteEyebrow);
-  setInputValue("inviteTitleInput", config.content.inviteTitle);
-  setInputValue("guideEyebrowInput", config.content.guideEyebrow);
-  setInputValue("guideTitleInput", config.content.guideTitle);
-  setInputValue("guideNoticeInput", config.content.guideNoticeLines.join("\n"));
+  setInputValue("guideNoticeInput", (config.content.guideNoticeLines || []).join("\n"));
   setInputValue("friendGuideTitleInput", config.content.friendGuideTitle);
-  setInputValue("friendGuideInput", config.content.friendGuideLines.join("\n"));
-  setInputValue("infoTitleInput", config.content.infoTitle);
-  setInputValue("infoSubtitleInput", config.content.infoSubtitle);
-  setInputValue("completeTitleInput", config.content.completeTitle);
-  setInputValue("completeSubtitleInput", config.content.completeSubtitle);
-  setInputValue("transitNoteInput", config.content.arrivalNotes.transit);
-  setInputValue("carNoteInput", config.content.arrivalNotes.car);
-  setInputValue("walkNoteInput", config.content.arrivalNotes.walk);
+  setInputValue("friendGuideInput", (config.content.friendGuideLines || []).join("\n"));
+
   adminBackdrop.hidden = false;
   adminPanel.hidden = false;
   renderAdminCalendar();
@@ -578,27 +577,27 @@ function toggleListValue(list, value, enabled) {
 }
 
 async function saveAdminSettings() {
-  config.rules.weekdayStart = document.getElementById("weekdayStartInput").value;
-  config.rules.holidayStart = document.getElementById("holidayStartInput").value;
-  config.rules.end = document.getElementById("endTimeInput").value;
-  config.content.bgImage = document.getElementById("bgImageInput").value.trim();
-  config.content.datePageTitle = document.getElementById("datePageTitleInput").value.trim() || defaultConfig.content.datePageTitle;
-  config.content.datePageSubtitle = document.getElementById("datePageSubtitleInput").value.trim() || defaultConfig.content.datePageSubtitle;
-  config.content.inviteEyebrow = document.getElementById("inviteEyebrowInput").value.trim() || defaultConfig.content.inviteEyebrow;
-  config.content.inviteTitle = document.getElementById("inviteTitleInput").value.trim() || defaultConfig.content.inviteTitle;
-  config.content.guideEyebrow = document.getElementById("guideEyebrowInput").value.trim() || defaultConfig.content.guideEyebrow;
-  config.content.guideTitle = document.getElementById("guideTitleInput").value.trim() || defaultConfig.content.guideTitle;
-  config.content.guideNoticeTitle = document.getElementById("guideNoticeTitleInput").value.trim() || defaultConfig.content.guideNoticeTitle;
-  config.content.guideNoticeLines = document.getElementById("guideNoticeInput").value.split("\n").map((line) => line.trim()).filter(Boolean);
-  config.content.friendGuideTitle = document.getElementById("friendGuideTitleInput").value.trim() || defaultConfig.content.friendGuideTitle;
-  config.content.friendGuideLines = document.getElementById("friendGuideInput").value.split("\n").map((line) => line.trim()).filter(Boolean);
-  config.content.infoTitle = document.getElementById("infoTitleInput").value.trim() || defaultConfig.content.infoTitle;
-  config.content.infoSubtitle = document.getElementById("infoSubtitleInput").value.trim() || defaultConfig.content.infoSubtitle;
-  config.content.completeTitle = document.getElementById("completeTitleInput").value.trim() || defaultConfig.content.completeTitle;
-  config.content.completeSubtitle = document.getElementById("completeSubtitleInput").value.trim() || defaultConfig.content.completeSubtitle;
-  config.content.arrivalNotes.transit = document.getElementById("transitNoteInput").value.trim();
-  config.content.arrivalNotes.car = document.getElementById("carNoteInput").value.trim();
-  config.content.arrivalNotes.walk = document.getElementById("walkNoteInput").value.trim();
+  // 안전하게 값을 가져오기 위한 헬퍼
+  const val = (id) => document.getElementById(id)?.value?.trim();
+
+  // 운영 규칙
+  config.rules.weekdayStart = val("weekdayStartInput") || config.rules.weekdayStart;
+  config.rules.holidayStart = val("holidayStartInput") || config.rules.holidayStart;
+  config.rules.end = val("endTimeInput") || config.rules.end;
+
+  console.log("Admin: bgImageInput value before save:", val("bgImageInput")); // 디버깅 로그
+  // 공통 화면 문구
+  config.content.bgImage = val("bgImageInput") || "";
+  config.content.datePageTitle = val("datePageTitleInput") || defaultConfig.content.datePageTitle;
+  
+  const noticeVal = val("guideNoticeInput");
+  if (noticeVal !== null) config.content.guideNoticeLines = noticeVal.split("\n").map(l => l.trim()).filter(Boolean);
+  
+  config.content.friendGuideTitle = val("friendGuideTitleInput") || defaultConfig.content.friendGuideTitle;
+  
+  const friendVal = val("friendGuideInput");
+  if (friendVal !== null) config.content.friendGuideLines = friendVal.split("\n").map(l => l.trim()).filter(Boolean);
+
   await saveConfigToSupabase();
   showSaveStatus("저장됐어요.");
   syncUI();
@@ -740,6 +739,23 @@ document.addEventListener("click", (event) => {
   const adminDateButton = event.target.closest("[data-admin-date-key]");
   const adminMonthButton = event.target.closest("[data-admin-month]");
 
+  // Step Pill (탭) 클릭 처리
+  const stepPillClicked = event.target.closest(".step-pill[data-go]");
+  if (stepPillClicked) {
+    const targetStep = stepPillClicked.dataset.go;
+    const stepOrder = ["date", "info", "complete"];
+    const currentStepIndex = stepOrder.indexOf(state.step);
+    const targetStepIndex = stepOrder.indexOf(targetStep);
+
+    // 현재 단계보다 미래의 탭을 누르는 것을 차단 (입력 없이 넘어가는 것 방지)
+    if (targetStepIndex > currentStepIndex && state.step !== "complete") {
+      return;
+    }
+    // 이전 단계나 현재 단계로 이동하는 것은 허용
+    go(targetStep);
+    return;
+  }
+
   if (event.target.closest("[data-admin-trigger]")) {
     clearTimeout(adminTapTimer);
     adminTapCount += 1;
@@ -763,7 +779,7 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  if (event.target.id === "authSubmitBtn") {
+  if (event.target.id === "authSubmitBtn" || (event.target.tagName === 'INPUT' && event.target.id === 'adminPasswordInput' && event.key === 'Enter')) {
     checkAdminPassword();
     return;
   }
@@ -830,13 +846,13 @@ document.addEventListener("click", (event) => {
     return;
   }
 
-  if (goButton) {
+  if (goButton && !stepPillClicked) { // stepPillClicked가 아닌 일반 data-go 버튼만 처리
     go(goButton.dataset.go);
     return;
   }
 
   if (event.target.closest("[data-action='back']")) {
-    const order = ["date", "guide", "info", "complete"];
+    const order = ["date", "info", "complete"];
     const index = order.indexOf(state.step);
     go(order[Math.max(index - 1, 0)]);
     return;

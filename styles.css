@@ -236,29 +236,26 @@ h2 {
 .home-visual,
 .hero-visual {
   position: relative;
-  min-height: 202px;
+  min-height: 340px; /* 카드가 아래로 붙을 수 있게 높이 확보 */
   overflow: hidden;
-  background-image: 
-    var(--custom-bg, none),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.84), transparent 44%),
-    radial-gradient(circle at 72% 24%, var(--secondary), transparent 40%),
-    linear-gradient(145deg, #ffffff 0%, var(--accent) 52%, var(--action) 100%);
-  background-size: cover;
+  background-size: cover; 
   background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .window-card {
-  position: absolute;
-  left: 24px;
-  bottom: 24px;
   z-index: 2;
-  width: min(420px, calc(100% - 48px));
-  border-radius: 12px;
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.88);
-  box-shadow: 0 12px 26px rgba(42, 32, 20, 0.1);
-  backdrop-filter: blur(12px);
+  width: calc(100% - 48px); /* 좌우 여백 확보 */
+  max-width: 400px;
+  min-width: 280px; /* 최소 너비 유지 */
+  border-radius: 16px; /* 둥근 모서리 */
+  padding: 20px 24px; /* 내부 여백 */
+  background: rgba(255, 255, 255, 0.9); /* 반투명 흰색 배경 */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); /* 그림자 */
+  backdrop-filter: blur(10px); /* 블러 효과 */
+  margin: 24px; /* 하단 여백 */
 }
 
 .window-card span {
@@ -304,6 +301,7 @@ h2 {
   align-items: center;
   color: #383632;
   font-size: 14px;
+  word-break: break-word; /* Ensure long text wraps */
   font-weight: 800;
 }
 
