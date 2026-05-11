@@ -31,7 +31,7 @@
         </button>
         <button class="topbar-title" type="button" data-admin-trigger aria-label="숨겨진 관리자 모드">
           <span class="eyebrow">건이블링</span>
-          <strong id="screenTitle">날짜 선택</strong>
+          <strong id="screenTitle">언제 볼까요?</strong>
         </button>
         <button class="icon-button" type="button" aria-label="초대 링크 공유">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -41,9 +41,9 @@
       </header>
 
       <nav class="stepper" aria-label="초대 단계">
-        <button type="button" class="step-pill is-active" data-go="date">1 날짜</button>
-        <button type="button" class="step-pill" data-go="info">2 정보</button>
-        <button type="button" class="step-pill" data-go="complete">3 완료</button>
+        <button type="button" class="step-pill is-active" data-go="date">1. 언제 봐요?</button>
+        <button type="button" class="step-pill" data-go="info">2. 누가 오나요?</button>
+        <button type="button" class="step-pill" data-go="complete">3. 다 됐어요!</button>
       </nav>
 
       <main class="layout">
@@ -51,8 +51,8 @@
           <section class="screen screen-date is-active" data-screen="date">
             <div class="section-heading">
               <div>
-                <h1 id="datePageTitle">언제 놀러올래?</h1>
-                <span id="datePageSubtitle">클릭 가능한 날만 선택돼요</span>
+                <h1 id="datePageTitle">언제 만날까요?</h1>
+                <span id="datePageSubtitle">종건이가 기다리는 날들이에요.</span>
                 <p id="futureLimitNotice" class="future-notice" style="display: none;">미래 날짜는 순차적으로 오픈됩니다</p>
               </div>
             </div>
@@ -110,7 +110,7 @@
             </section>
 
             <section class="time-card">
-              <h2>가능한 시간</h2>
+              <h2>몇 시쯤 보는 게 좋을까요?</h2>
               <div class="time-options" id="timeOptions"></div>
             </section>
 
@@ -121,26 +121,26 @@
               </div>
             </section>
 
-            <button class="primary-button bottom-action" type="button" data-go="info">다음</button>
+            <button class="primary-button bottom-action" type="button" data-go="info">좋아요, 다음으로!</button>
           </section>
 
           <section class="screen screen-info" data-screen="info">
             <div class="section-heading">
-              <h1 id="infoTitle">누가 오는지 알려줘</h1>
-              <span id="infoSubtitle">호스트에게만 보여요</span>
+              <h1 id="infoTitle">누구랑 오시나요?</h1>
+              <span id="infoSubtitle">더 반갑게 맞이하고 싶어요.</span>
             </div>
 
             <form class="booking-form">
               <label>
-                <span>이름</span>
-                <input type="text" placeholder="성함 또는 닉네임을 입력해주세요" autocomplete="name" />
+                <span>이름이나 닉네임</span>
+                <input type="text" placeholder="뭐라고 불러드리면 좋을까요?" autocomplete="name" />
               </label>
               <label>
-                <span>연락처</span>
-                <input type="tel" placeholder="연락 가능한 번호를 입력해주세요" autocomplete="tel" />
+                <span>핸드폰 번호</span>
+                <input type="tel" placeholder="번호를 알려주시면 연락드릴게요" autocomplete="tel" />
               </label>
               <label>
-                <span>오는 인원</span>
+                <span>모두 몇 명인가요?</span>
                 <select id="guestCount">
                   <option value="1">1명</option>
                   <option value="2" selected>2명</option>
@@ -150,16 +150,16 @@
               </label>
               <div class="companion-fields" id="companionFields"></div>
               <label>
-                <span>추천 메뉴</span>
-                <textarea rows="3" placeholder="함께 먹고 싶은 메뉴나 못 드시는 음식이 있다면 적어주세요"></textarea>
+                <span>먹고 싶은 음식</span>
+                <textarea rows="3" placeholder="메뉴 추천이나 못 먹는 음식이 있다면 알려주세요!"></textarea>
               </label>
               <label>
-                <span>부탁사항</span>
-                <textarea rows="4" placeholder="호스트에게 전달할 추가 메시지나 궁금한 점을 적어주세요"></textarea>
+                <span>종건이에게 할 말</span>
+                <textarea rows="4" placeholder="하고 싶은 말이나 궁금한 점을 편하게 적어줘요."></textarea>
               </label>
             </form>
 
-            <div class="segmented" role="group" aria-label="오는 방법">
+            <div class="segmented" role="group" aria-label="어떻게 오시나요?">
               <button type="button" class="is-active" data-arrival="transit">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M6 4h12a2 2 0 0 1 2 2v9a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V6a2 2 0 0 1 2-2ZM8 20l2-2M16 18l2 2M7 9h10" />
@@ -183,10 +183,10 @@
 
             <label class="check-row">
               <input type="checkbox" checked />
-              <span>방문 하루 전 알림을 받을게요.</span>
+              <span>약속 하루 전날, 잊지 않게 미리 알려드릴게요!</span>
             </label>
 
-            <button class="primary-button bottom-action" type="button" data-complete>초대 확정하기</button>
+            <button class="primary-button bottom-action" type="button" data-complete>종건이네 놀러가기 확정!</button>
           </section>
 
           <section class="screen screen-complete" data-screen="complete">
@@ -196,13 +196,13 @@
                   <path d="M20 6 9 17l-5-5" />
                 </svg>
               </div>
-              <h1 id="completeTitle">놀러오는 약속이 잡혔어요!</h1>
-              <p id="completeSubtitle">종건이에게 방문 정보가 전달되었습니다.</p>
+              <h1 id="completeTitle">와아, 약속이 생겼어요!</h1>
+              <p id="completeSubtitle">종건이한테도 기쁜 소식을 전해줄게요.</p>
               <a class="wallet-button" id="calendarLink" href="#" target="_blank" rel="noopener">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M7 3v3M17 3v3M4 9h16M5 5h14v15H5z" />
                 </svg>
-                캘린더에 저장하기
+                우리의 약속 캘린더에 저장하기
               </a>
             </div>
 

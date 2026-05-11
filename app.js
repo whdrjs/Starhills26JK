@@ -22,10 +22,10 @@ let adminTapCount = 0;
 let adminTapTimer;
 
 const titles = {
-  date: "날짜 선택",
-  guide: "집 안내",
-  info: "방문 정보",
-  complete: "약속 완료",
+  date: "언제 볼까요?",
+  guide: "초대장 살짝 보기",
+  info: "누가 오나요?",
+  complete: "우리 곧 만나요!",
 };
 
 const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
@@ -47,17 +47,17 @@ const defaultConfig = {
   booked: [],
   content: {
     bgImage: "starhills.png",
-    datePageTitle: "언제 놀러올래?",
-    datePageSubtitle: "클릭 가능한 날만 선택돼요",
-    inviteEyebrow: "종건이네 집 초대",
-    inviteTitle: "저녁 먹고 수다 떨기",
-    guideEyebrow: "초대 상세",
-    guideTitle: "종건이네 집에 놀러오기",
-    infoTitle: "누가 오는지 알려줘",
-    infoSubtitle: "호스트에게만 보여요",
-    completeTitle: "놀러오는 약속이 잡혔어요!",
-    completeSubtitle: "종건이에게 방문 정보가 전달되었습니다.",
-    guideNoticeTitle: "알아두면 좋아요",
+    datePageTitle: "반가워요! 언제 만날까요?",
+    datePageSubtitle: "종건이가 기다리는 날들이에요.",
+    inviteEyebrow: "INVITATION",
+    inviteTitle: "종건이네 집으로 놀러오세요",
+    guideEyebrow: "GUIDE",
+    guideTitle: "찾아오시는 길",
+    infoTitle: "누구랑 오시나요?",
+    infoSubtitle: "설레는 마음으로 기다리고 있을게요.",
+    completeTitle: "와아, 약속이 생겼어요!",
+    completeSubtitle: "종건이한테도 바로 알려줄게요.",
+    guideNoticeTitle: "오시기 전에 꼭 읽어주세요!",
     guideNoticeLines: [
       "주소는 목동중앙본로 7길 23, 301호예요.",
       "엘리베이터는 1층 공동현관 오른쪽에 있어요.",
@@ -70,9 +70,9 @@ const defaultConfig = {
       "밤 11시 전에는 마무리하는 약속이에요.",
     ],
     arrivalNotes: {
-      transit: "대중교통은 목동역에서 내려 도보 이동을 추천해요.",
-      car: "집 앞 주차는 어렵고, 가까운 공영주차장을 이용해주세요.",
-      walk: "도보로 오면 골목이 좁아서 큰길 쪽으로 오는 길을 추천해요.",
+      transit: "목동역에서 조금만 걸으면 금방 도착해요.",
+      car: "집 앞은 주차가 조금 힘들어요. 근처 공영주차장을 이용해줘요!",
+      walk: "골목이 조금 좁아요. 조심히 오세요!",
     },
   },
 };
@@ -450,10 +450,10 @@ function renderCompanions() {
     const card = document.createElement("section");
     card.className = "companion-card";
     card.innerHTML = `
-      <h2>동행인 ${index}</h2>
+      <h2>함께 오는 친구 ${index}</h2>
       <label>
-        <span>이름</span>
-        <input type="text" class="companion-name" placeholder="동행인 이름" autocomplete="off" />
+        <span>이름이나 닉네임</span>
+        <input type="text" class="companion-name" placeholder="친구를 어떻게 부르면 좋을까요?" autocomplete="off" />
       </label>
     `;
     companionFields.append(card);
