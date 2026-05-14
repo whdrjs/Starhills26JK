@@ -91,22 +91,7 @@
                   <strong id="monthLabel">2026년 5월</strong>
                 </div>
                 <button class="icon-button small" type="button" data-month="next" aria-label="다음 달">
-                  <svg viewBox="0 0--- a/Users/jk/Documents/New project 2/Starhills26JK-1/index.html
-                  +++ b/Users/jk/Documents/New project 2/Starhills26JK-1/index.html
-                  @@ -234,8 +234,11 @@
-                             <form class="admin-form">
-                               <section class="admin-section">
-                  -              <h3>선택한 날짜</h3>
-                  -              <input id="adminDateInput" type="text" readonly />
-                  +              <h3>선택한 날짜 및 시간</h3>
-                  +              <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-                  +                <input id="adminDateInput" type="text" readonly style="flex: 2;" />
-                  +                <input id="adminTimeInput" type="text" readonly placeholder="시간" style="flex: 1;" />
-                  +              </div>
-                                 <div class="admin-toggle-row">
-                                   <label>
-                                     <input id="holidayToggle" type="checkbox" />
-                   24 24" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M9 6l6 6-6 6" />
                   </svg>
                 </button>
@@ -327,8 +312,11 @@
             </section>
 
             <section class="admin-section">
-              <h3>선택한 날짜</h3>
-              <input id="adminDateInput" type="text" readonly />
+              <h3>선택한 날짜 및 시간</h3>
+              <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                <input id="adminDateInput" type="text" readonly style="flex: 2;" />
+                <input id="adminTimeInput" type="text" readonly placeholder="시간" style="flex: 1;" />
+              </div>
               <div class="admin-toggle-row">
                 <label>
                   <input id="holidayToggle" type="checkbox" />

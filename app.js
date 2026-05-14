@@ -155,9 +155,13 @@ async function loadConfigFromSupabase() {
             ...defaultConfig.content.arrivalNotes,
             ...((saved.content || {}).arrivalNotes || {}),
           },
-          bookingDetails: saved.bookingDetails || {},
         },
       };
+      // 데이터 구조 일관성 확보: 최상위 bookingDetails 우선 로드
+      config.bookingDetails = saved.bookingDetails || (saved.content && saved.content.bookingDetails) || {};
+    } else {
+      // 데이터가 없는 초기 상태 대응
+      config.bookingDetails = {};
     }
     console.log("Config loaded from Supabase. bgImage:", config.content.bgImage); // 디버깅 로그 추가
   } catch (err) {
@@ -491,8 +495,12 @@ function renderBookedList() {
   sortedBooked.forEach(key => {
     const detail = config.bookingDetails?.[key];
     const li = document.createElement("li");
-    const ts = detail?.timestamp ? ` | [신청] ${new Date(detail.timestamp).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}` : '';
-    li.textContent = detail ? `[방문] ${formatDate(key)} ${detail.time || ''} (${detail.name})${ts}` : formatDate(key);
+    
+    // 리스트에서 방문 시간과 신청 시각을 더 명확히 구분
+    const visitTime = detail?.time ? ` ${detail.time}` : ' (시간 미지정)';
+    const applyTs = detail?.timestamp ? ` | [신청일: ${new Date(detail.timestamp).toLocaleDateString('ko-KR')}]` : '';
+    
+    li.textContent = detail ? `[방문] ${formatDate(key)}${visitTime} - ${detail.name}${applyTs}` : `${formatDate(key)} (관리자 수동 점유)`;
     li.onclick = () => {
       const date = dateFromKey(key);
       adminState.month = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -510,15 +518,21 @@ function renderBookedList() {
 }
 
 function syncAdminForm() {
-  const selectedTimes = availableTimesFor(adminState.dateKey);
+  const detail = config.bookingDetails?.[adminState.dateKey];
   setInputValue("adminDateInput", formatDate(adminState.dateKey));
-  setInputValue("adminTimeInput", config.bookingDetails?.[adminState.dateKey]?.time || "");
+  
+  // 방문 시간 표시 (Time Card에서 선택했던 값)
+  const timeInput = document.getElementById("adminTimeInput");
+  if (timeInput) {
+    timeInput.value = detail?.time || "";
+    timeInput.style.backgroundColor = detail?.time ? "#fff9c4" : ""; // 데이터가 있으면 강조
+  }
+
   setChecked("holidayToggle", config.holidays.includes(adminState.dateKey));
   setChecked("blockedToggle", config.blocked.includes(adminState.dateKey));
   setChecked("bookedToggle", config.booked.includes(adminState.dateKey));
 
   // 예약 상세 정보 표시
-  const detail = config.bookingDetails?.[adminState.dateKey];
   const detailContainer = document.getElementById("adminBookingDetailDisplay");
   if (!detailContainer) return;
 
@@ -526,12 +540,13 @@ function syncAdminForm() {
     detailContainer.hidden = false;
     detailContainer.innerHTML = `
       <div class="admin-detail-card">
-        <p><strong>📍 방문 예정:</strong> ${formatDate(adminState.dateKey)} ${detail.time || ''}</p>
+        <p style="font-size: 1.1em; color: #d32f2f;"><strong>📍 방문 확정 시간: ${detail.time || '미정'}</strong></p>
+        <p><strong>📅 방문 날짜:</strong> ${formatDate(adminState.dateKey)}</p>
         <p><strong>👤 신청자:</strong> ${detail.name} (${detail.phone})</p>
         <p><strong>👥 인원:</strong> ${detail.guests} (동행: ${detail.companions.join(', ') || '없음'})</p>
         <p><strong>💬 메뉴/부탁:</strong> ${detail.menu || '없음'} / ${detail.request || '없음'}</p>
         <p style="font-size: 11px; color: #888; margin-top: 10px; border-top: 1px dashed #eee; padding-top: 8px;">
-          <strong>🕒 예약 신청 일시:</strong> ${detail.timestamp ? new Date(detail.timestamp).toLocaleString('ko-KR') : '-'}
+          <strong>🕒 시스템 신청 기록:</strong> ${detail.timestamp ? new Date(detail.timestamp).toLocaleString('ko-KR') : '-'}
         </p>
       </div>
     `;
@@ -540,6 +555,7 @@ function syncAdminForm() {
     detailContainer.innerHTML = "";
   }
 
+  const selectedTimes = availableTimesFor(adminState.dateKey);
   setText(
     "adminDateSummary",
     selectedTimes.length ? `친구에게 ${selectedTimes[0]}부터 ${selectedTimes[selectedTimes.length - 1]}까지 보여요.` : "친구 화면에서 선택할 수 없는 날짜예요.",
