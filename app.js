@@ -520,7 +520,10 @@ function syncAdminForm() {
   // 예약 상세 정보 표시
   const detail = config.bookingDetails?.[adminState.dateKey];
   const detailContainer = document.getElementById("adminBookingDetailDisplay");
+  if (!detailContainer) return;
+
   if (detail && config.booked.includes(adminState.dateKey)) {
+    detailContainer.hidden = false;
     detailContainer.innerHTML = `
       <div class="admin-detail-card">
         <p><strong>📍 방문 예정:</strong> ${formatDate(adminState.dateKey)} ${detail.time || ''}</p>
@@ -533,6 +536,7 @@ function syncAdminForm() {
       </div>
     `;
   } else {
+    detailContainer.hidden = true;
     detailContainer.innerHTML = "";
   }
 
