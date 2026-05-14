@@ -491,8 +491,8 @@ function renderBookedList() {
   sortedBooked.forEach(key => {
     const detail = config.bookingDetails?.[key];
     const li = document.createElement("li");
-    const ts = detail?.timestamp ? ` [${new Date(detail.timestamp).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })} 신청]` : '';
-    li.textContent = detail ? `${formatDate(key)} ${detail.time || ''} (${detail.name})${ts}` : formatDate(key);
+    const ts = detail?.timestamp ? ` | [신청] ${new Date(detail.timestamp).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}` : '';
+    li.textContent = detail ? `[방문] ${formatDate(key)} ${detail.time || ''} (${detail.name})${ts}` : formatDate(key);
     li.onclick = () => {
       const date = dateFromKey(key);
       adminState.month = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -523,10 +523,13 @@ function syncAdminForm() {
   if (detail && config.booked.includes(adminState.dateKey)) {
     detailContainer.innerHTML = `
       <div class="admin-detail-card">
-        <p><strong>신청자:</strong> ${detail.name} (${detail.phone})</p>
-        <p><strong>인원:</strong> ${detail.guests} (동행: ${detail.companions.join(', ') || '없음'})</p>
-        <p><strong>메뉴/부탁:</strong> ${detail.menu || '없음'} / ${detail.request || '없음'}</p>
-        <p style="font-size: 11px; color: #888; margin-top: 8px; border-top: 1px dashed #eee; padding-top: 6px;">신청 일시: ${detail.timestamp ? new Date(detail.timestamp).toLocaleString('ko-KR') : '-'}</p>
+        <p><strong>📍 방문 예정:</strong> ${formatDate(adminState.dateKey)} ${detail.time || ''}</p>
+        <p><strong>👤 신청자:</strong> ${detail.name} (${detail.phone})</p>
+        <p><strong>👥 인원:</strong> ${detail.guests} (동행: ${detail.companions.join(', ') || '없음'})</p>
+        <p><strong>💬 메뉴/부탁:</strong> ${detail.menu || '없음'} / ${detail.request || '없음'}</p>
+        <p style="font-size: 11px; color: #888; margin-top: 10px; border-top: 1px dashed #eee; padding-top: 8px;">
+          <strong>🕒 예약 신청 일시:</strong> ${detail.timestamp ? new Date(detail.timestamp).toLocaleString('ko-KR') : '-'}
+        </p>
       </div>
     `;
   } else {
