@@ -491,7 +491,8 @@ function renderBookedList() {
   sortedBooked.forEach(key => {
     const detail = config.bookingDetails?.[key];
     const li = document.createElement("li");
-    li.textContent = detail ? `${formatDate(key)} (${detail.name})` : formatDate(key);
+    const ts = detail?.timestamp ? ` [${new Date(detail.timestamp).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })} 신청]` : '';
+    li.textContent = detail ? `${formatDate(key)} ${detail.time || ''} (${detail.name})${ts}` : formatDate(key);
     li.onclick = () => {
       const date = dateFromKey(key);
       adminState.month = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -511,6 +512,7 @@ function renderBookedList() {
 function syncAdminForm() {
   const selectedTimes = availableTimesFor(adminState.dateKey);
   setInputValue("adminDateInput", formatDate(adminState.dateKey));
+  setInputValue("adminTimeInput", config.bookingDetails?.[adminState.dateKey]?.time || "");
   setChecked("holidayToggle", config.holidays.includes(adminState.dateKey));
   setChecked("blockedToggle", config.blocked.includes(adminState.dateKey));
   setChecked("bookedToggle", config.booked.includes(adminState.dateKey));
@@ -524,6 +526,7 @@ function syncAdminForm() {
         <p><strong>신청자:</strong> ${detail.name} (${detail.phone})</p>
         <p><strong>인원:</strong> ${detail.guests} (동행: ${detail.companions.join(', ') || '없음'})</p>
         <p><strong>메뉴/부탁:</strong> ${detail.menu || '없음'} / ${detail.request || '없음'}</p>
+        <p style="font-size: 11px; color: #888; margin-top: 8px; border-top: 1px dashed #eee; padding-top: 6px;">신청 일시: ${detail.timestamp ? new Date(detail.timestamp).toLocaleString('ko-KR') : '-'}</p>
       </div>
     `;
   } else {
@@ -753,7 +756,7 @@ async function finalizeBooking() {
 
   config.bookingDetails = config.bookingDetails || {};
   config.bookingDetails[state.dateKey] = {
-    name, phone, guests: state.guests, companions, menu, request, 
+    name, phone, time: state.time, guests: state.guests, companions, menu, request, 
     timestamp: new Date().toISOString()
   };
 
