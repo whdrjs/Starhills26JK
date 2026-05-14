@@ -156,9 +156,8 @@ async function loadConfigFromSupabase() {
             ...((saved.content || {}).arrivalNotes || {}),
           },
         },
+          bookingDetails: saved.bookingDetails || (saved.content && saved.content.bookingDetails) || {},
       };
-      // 데이터 구조 일관성 확보: 최상위 bookingDetails 우선 로드
-      config.bookingDetails = saved.bookingDetails || (saved.content && saved.content.bookingDetails) || {};
     } else {
       // 데이터가 없는 초기 상태 대응
       config.bookingDetails = {};
@@ -330,7 +329,11 @@ function renderCalendar() {
 
 function renderTimes() {
   const times = availableTimesFor(state.dateKey);
-  if (!times.includes(state.time)) state.time = times[0] || "";
+  // 날짜 선택 단계(date)에서만 시간을 자동으로 첫 번째 슬롯으로 맞춤
+  // 정보 입력 단계(info)에서는 이미 선택된 시간을 유지해야 함 (wiping 방지)
+  if (state.step === "date" && !times.includes(state.time)) {
+    state.time = times[0] || "";
+  }
 
   timeOptions.innerHTML = "";
   if (!times.length) {
@@ -406,7 +409,8 @@ function syncCalendarLink() {
 
 function syncUI() {
   console.log(`syncUI: 현재 스텝: ${state.step}`);
-  if (state.step !== "complete") ensureSelectedDateIsAvailable();
+  // 예약 완료 화면이거나 정보 입력 중에는 선택한 날짜/시간을 강제로 바꾸지 않음
+  if (state.step === "date") ensureSelectedDateIsAvailable();
   const formattedDate = formatDate(state.dateKey);
   const schedule = `${formattedDate} ${state.time}`;
 
@@ -778,8 +782,12 @@ async function finalizeBooking() {
   const companions = [...document.querySelectorAll(".companion-name")].map(i => i.value.trim());
 
   config.bookingDetails = config.bookingDetails || {};
+  
+  // 현재 선택된 시간이 비어있지 않은지 최종 확인
+  const finalTime = state.time || (availableTimesFor(state.dateKey)[0]) || "시간 미정";
+
   config.bookingDetails[state.dateKey] = {
-    name, phone, time: state.time, guests: state.guests, companions, menu, request, 
+    name, phone, time: finalTime, guests: state.guests, companions, menu, request, 
     timestamp: new Date().toISOString()
   };
 
